@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Times New Roman", Times, Baskerville, Georgia, serif;
+}
+
+
+.Rating{
+    background-color: seagreen;
+    display: inline-block;
+    font-size: 13px !important;
+    color: white;
+    font-weight: 700;
+   padding-block: 5px !important;
+    padding-inline: 10px !important;
+    border-radius: 6px;
+}
+.HoverEffectInTitle:hover{
+    color: blue;
+}

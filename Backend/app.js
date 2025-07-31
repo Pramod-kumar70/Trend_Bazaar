@@ -1,0 +1,63 @@
+// Required modules
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors')
+const mongoose = require('mongoose');
+
+// Route imports
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const productRoute = require('./routes/productRoute'); // ✅ Make sure this file exports router
+
+const app = express();
+
+// MongoDB Connection
+const URI = "mongodb+srv://TestUser70:TestUserPass7070@cluster0ne.4hhjel9.mongodb.net/Products?retryWrites=true&w=majority&appName=Cluster0ne";
+
+async function connectDB() {
+  try {
+    await mongoose.connect(URI);
+    console.log('✅ Connected to MongoDB');
+  } catch (err) {
+    console.error('❌ MongoDB connection failed:', err);
+  }
+}
+
+connectDB();
+
+// View engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// Middlewares
+app.use(logger('dev'));
+app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Routes
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/product', productRoute); // ✅ this line works only if productRoute exports router
+
+// 404 handler
+app.use(function (req, res, next) {
+  next(createError(404));
+});
+
+// Error handler
+app.use(function (err, req, res, next) {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+// Export app
+
+module.exports = app;
