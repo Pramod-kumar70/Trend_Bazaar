@@ -11,35 +11,35 @@ import img7 from "../../assets/ff79341b24d091cd.webp"
 
 function Slider() {
   return (
-    <Carousel>
+    <Carousel style={{marginTop:"66px" , boxShadow:"10px"}}>
 
 
       <Carousel.Item interval={2000}>
-        <Box component='img' src={img7} height={'250px'} width={'100%'} />
+        <Box component='img' src={img7} height={'270px'} width={'100%'} />
       </Carousel.Item>
 
       <Carousel.Item interval={2000}>
-        <Box component='img' src={img4} height={'250px'} width={'100%'} />
+        <Box component='img' src={img4} height={'270px'} width={'100%'} />
       </Carousel.Item>
 
       <Carousel.Item interval={2000}>
-       <Box component='img' src={img5} height={'250px'}  width={'100%'}/>
+       <Box component='img' src={img5} height={'270px'}  width={'100%'}/>
       </Carousel.Item>
 
       <Carousel.Item interval={2000}>
-        <Box component='img' src={img3} height={'250px'} width={'100%'} />
+        <Box component='img' src={img3} height={'270px'} width={'100%'} />
       </Carousel.Item>
 
       <Carousel.Item interval={2000}>
-        <Box component='img' src={img6} height={'250px'} width={'100%'} />
+        <Box component='img' src={img6} height={'270px'} width={'100%'} />
       </Carousel.Item>
 
       <Carousel.Item interval={2000}>
-       <Box component='img' src={img2} height={'250px'}  width={'100%'}/>
+       <Box component='img' src={img2} height={'270px'}  width={'100%'}/>
       </Carousel.Item>
 
         <Carousel.Item interval={2000}>
-       <Box component='img' src={img1} height={'250px'}  width={'100%'}/>
+       <Box component='img' src={img1} height={'270px'}  width={'100%'}/>
       </Carousel.Item>
 
 

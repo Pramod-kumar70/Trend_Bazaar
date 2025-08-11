@@ -7,16 +7,21 @@ const logger = require('morgan');
 const cors = require('cors')
 const mongoose = require('mongoose');
 
+
+
 // Route imports
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const productRoute = require('./routes/productRoute'); // ✅ Make sure this file exports router
+const cartRoutes = require("./routes/CartRoute")
+const SellerRoute = require("./routes/SellerRoute")
 
 const app = express();
 
+
+
 // MongoDB Connection
 const URI = "mongodb+srv://TestUser70:TestUserPass7070@cluster0ne.4hhjel9.mongodb.net/Products?retryWrites=true&w=majority&appName=Cluster0ne";
-
 async function connectDB() {
   try {
     await mongoose.connect(URI);
@@ -25,12 +30,14 @@ async function connectDB() {
     console.error('❌ MongoDB connection failed:', err);
   }
 }
-
 connectDB();
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+
+
 
 // Middlewares
 app.use(logger('dev'));
@@ -40,10 +47,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+
+
+
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/product', productRoute); // ✅ this line works only if productRoute exports router
+app.use('/product', productRoute); 
+app.use("/cart", cartRoutes);
+app.use('/seller' , SellerRoute)
+
+
+
+
 
 // 404 handler
 app.use(function (req, res, next) {

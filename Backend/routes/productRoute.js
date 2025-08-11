@@ -1,14 +1,28 @@
 var express = require('express');
 var router = express.Router();
-var getallproducts = require('../controllers/productControllers')
+
+var { getAllProducts, getProductsByCategory, getProductsByCategoryName } = require('../controllers/productControllers');
 var getParticularDataById = require('../controllers/ParticularDataByID');
-const SearchProductByName = require('../controllers/SearchController');
+var SearchProductByName = require('../controllers/SearchController');
+var SearchedProductControllers = require("../controllers/SearchedProductControllers");
 
+// Home page (TopTrendy, Sports, MoreData)
+router.get('/', getAllProducts);
 
+// View All by category (toptrendy, sports, moredata)
+router.get('/viewall/:name', getProductsByCategory);
 
+// Product details by ID (single product)
+router.get('/:id', getParticularDataById);
 
-router.get('/' , getallproducts)
-router.get('/:id' ,getParticularDataById)
-router.get('/find/:name' , SearchProductByName)
+// Search by product name
+router.get('/find/:name', SearchProductByName);
+
+// Search product details by name & id
+router.get('/find/:name/:id', SearchedProductControllers);
+
+router.get('/viewall/:category', getProductsByCategory);
+
+router.get("/category/:category", getProductsByCategoryName);
 
 module.exports = router;

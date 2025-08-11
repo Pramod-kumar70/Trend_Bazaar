@@ -1,0 +1,14 @@
+
+.Rating{
+    background-color: seagreen;
+    display: inline-block;
+    font-size: 13px !important;
+    color: white;
+    font-weight: 700;
+   padding-block: 5px !important;
+    padding-inline: 10px !important;
+    border-radius: 6px;
+}
+.UL>li{
+    margin-block: 10px;
+}

@@ -1,227 +1,162 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import logoimg from '../../assets/images.png'
-import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
-
+import SearchIcon from '@mui/icons-material/Search';
+import { Link, useNavigate } from 'react-router-dom';
+import { VscAccount } from "react-icons/vsc";
+import { GrCart } from "react-icons/gr";
+import { AiOutlineShop } from "react-icons/ai";
+import { MdOutlineLogout } from "react-icons/md";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import logoimg from '../../assets/images.png';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: "5px",
-  backgroundColor: "#d9e6ff",
-  
-  '&:hover': {
-    backgroundColor: "#d9e6ff",
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  maxWidth:"800px",
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
+  backgroundColor: '#f0f5ff',
+  borderRadius: '2px',
+  marginLeft: 20,
+  maxWidth: '550px',   // Flipkart size
+  width: '100%',
+  height: '36px',      // Exact Flipkart height
+  overflow: 'hidden',
+  '&:hover': {
+    backgroundColor: '#d9e6ff'
+  }
+  // Icon aur input overlap na ho
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  flex: 1,
+  fontSize: '0.9rem',
+  padding: '0 10px',
+  color: 'black',
   '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '500px',
-    },
-  },
+    padding: 0,
+    height: '36px',    // Input height match
+    lineHeight: '36px' // Text vertical center
+  }
 }));
 
-export default function Navbar() {
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  backgroundColor: '#ffe11b',
+  height: '100%',
+  width: '44px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  borderTopRightRadius: '2px',
+  borderBottomRightRadius: '2px',
+}));
 
-  const navigate = useNavigate()
-  const [SearchTerm, setSearchTerm] = React.useState()
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+export default function Navbar({
+  Bgcolor = "white",
+  TextColor = "black",
+  ImageSrc = logoimg,
+  imageWidth = "80px"
+}) {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const [SearchTerm, setSearchTerm] = React.useState("");
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const handleSearch = (e) => {
-    if (e.key === 'Enter' || e.type === 'click') {
-      if (SearchTerm.trim() !== '') {
-        navigate(`/search/${SearchTerm}`);
-      }
+  const handleSearch = () => {
+    if (!SearchTerm.trim()) {
+      toast.warning("Please enter a search term 🔍");
+      return;
     }
+    navigate(`/search/${SearchTerm}`);
   };
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-           Login
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: 'white', color: "black" }}>
-        <Toolbar>
-          <Box component='img' src={logoimg} width={'80px'} />
+      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 }}>
+        <Toolbar sx={{ display: "flex", alignItems: "center", gap: 2 }}>
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-             
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={handleSearch}
+          {/* Logo */}
+          <Link to='/'>
+            <Box
+              component='img'
+              src={ImageSrc}
+              alt="Logo"
+              sx={{ width: imageWidth, cursor: "pointer", borderRadius: 1.5 }}
             />
+          </Link>
+
+          {/* Search Bar */}
+          <Search>
+            <StyledInputBase
+              placeholder="Search for products, brands and more"
+              value={SearchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <SearchIconWrapper onClick={handleSearch}>
+              <SearchIcon style={{ color: "#2874f0" }} />
+            </SearchIconWrapper>
           </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' ,alignItems:"center",} }}>
-            <Typography>Login</Typography>
-             <Typography sx={{marginInline:5}}>Became a seller</Typography>
-             <Typography sx={{marginend:5}}>Cart</Typography>
 
+          {/* Right Side Menu */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto" }}>
 
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
+            {/* Become a Seller */}
+            <Typography
+              sx={{ cursor: "pointer", fontWeight: 500 }}
+              onClick={() => {
+                const baseUrl = window.location.origin;
+                if (window.location.pathname === "/BecomeaSeller") return;
+                window.open(`${baseUrl}/BecomeaSeller`, "_blank", "noopener,noreferrer");
+              }}
             >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
+              <AiOutlineShop style={{ marginRight: "5px" }} /> Become a Seller
+            </Typography>
+
+            {/* Cart */}
+            <Typography
+              sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
+              onClick={() => {
+                if (token) navigate('/cart/Details/MyCart');
+                else {
+                  toast.info("Please login to view your cart 🛍️");
+                  navigate('/login');
+                }
+              }}
             >
-              <MoreIcon />
-            </IconButton>
+              <GrCart style={{ marginRight: "5px" }} /> Cart
+            </Typography>
+
+            {/* Login / Logout */}
+            {token ? (
+              <Typography
+                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  toast.success("Logged out successfully ✅");
+                  navigate("/login");
+                }}
+              >
+                <MdOutlineLogout style={{ marginRight: "5px" }} /> Logout
+              </Typography>
+            ) : (
+              <Typography
+                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
+                onClick={() => navigate('/login')}
+              >
+                <VscAccount style={{ marginRight: "5px" }} /> Login
+              </Typography>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
     </Box>
   );
 }

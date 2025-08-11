@@ -1,0 +1,65 @@
+
+.LoginLink{
+    color: black;
+    text-decoration: none;
+}
+
+.LoginLink:hover{
+    color: rgb(10, 76, 232);
+    text-decoration: underline;
+}.Logout {
+  text-align: center;
+  display: flex;                  /* ✅ Always flex */
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* ✅ Faster & smooth */
+}
+
+.Logout:hover {
+  background-color: red;
+  color: white;
+  transform: scale(1.05);         /* ✅ Slight zoom effect */
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2); /* ✅ Glow effect */
+}
+
+
+.NavItem {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  height: 40px;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+}
+
+.NavItem:hover {
+  background-color: #1976d2; /* Professional blue */
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+
+.LoginLink {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+
+.InputField::placeholder{
+  color: black;
+}
+.InputField{
+  color: black;
+}
