@@ -1,20 +1,42 @@
-// Log In 
-import { toast } from "react-toastify";
-import { Grid, Typography } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Box,
+  Link as MuiLink,
+  Modal,
+} from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
-import Navbar from './../Navbar/Navbar';
-import FlipkartSecImg from "../../assets/F4.png"
+import Navbar from "../Navbar/Navbar";
+import FlipkartSecImg from "../../assets/F4.png";
+import { toast } from "react-toastify";
 
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  maxWidth: "90vw",
+  bgcolor: "background.paper",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 4,
+};
 
+export default function LogInModal() {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
-export default function LogIn() {
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const navigate = useNavigate()
   const [User, setUser] = useState({
-
     Email: "",
-    Pass: ""
+    Pass: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -22,112 +44,137 @@ export default function LogIn() {
   async function HandleSubmit(e) {
     e.preventDefault();
 
-
     const newErrors = {};
     if (!User.Email.trim()) newErrors.Email = "Email is required";
     if (!User.Pass.trim()) newErrors.Pass = "Password is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return; // Stop submit
+      return;
     }
 
-    setErrors({}); // Clear previous errors
-
+    setErrors({});
 
     try {
       const response = await fetch("http://localhost:3001/users/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-
           email: User.Email,
-          password: User.Pass
-        })
+          password: User.Pass,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-       toast.success("Login Successful! 🎉");
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
-        console.log("Response:", data);
-        navigate('/')
-        setUser({ Email: "", Pass: "" });
+        toast.success("Login Successful! 🎉");
 
+        localStorage.setItem("token", data.token);
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+        } else {
+          localStorage.removeItem("user");
+        }
+
+        setUser({ Email: "", Pass: "" });
+        handleClose();
+        navigate("/");
       } else {
         toast.error(data.message || "Invalid email or password ❌");
       }
-
     } catch (error) {
-      console.error("Error while sending request:", error);
+      console.error("Error:", error);
       toast.error("Something went wrong. Please try again ❌");
     }
   }
 
   return (
     <>
-      <Navbar Bgcolor='#2874f0' TextColor='white' ImageSrc={FlipkartSecImg} imageWidth="40px" />
-      <Grid container justifyContent={'center'} mt={"80px"} >
-        <Grid size={2} bgcolor={'blue'} color={'white'} p={4} boxShadow={3}>
-          <Typography variant="h4" fontWeight={'bold'} >Log In</Typography>
-          <Typography my={3}>Get access to your Orders, Wishlist and Recommendations</Typography>
-          <img src="https://flickart-aashish.vercel.app/assets/auth-5b5fdc9c.png" width={'100%'} alt="" />
+      <Navbar
+        Bgcolor="#2874f0"
+        TextColor="white"
+        ImageSrc={FlipkartSecImg}
+        imageWidth="40px"
+      />
+      <Box sx={{ textAlign: "center", mt: 10 }}>
+        <Button variant="contained" onClick={handleOpen} sx={{ py: 1.5, px: 4 }}>
+          Open Login
+        </Button>
+      </Box>
 
-        </Grid>
-        <Grid size={3.5} container padding={3} boxShadow={3} justifyContent={'center'} >
-          <Grid size={11}>
+      <Modal open={open} onClose={handleClose} aria-labelledby="login-modal-title">
+        <Box sx={modalStyle}>
+          <Typography
+            id="login-modal-title"
+            variant="h5"
+            component="h2"
+            mb={2}
+            fontWeight="bold"
+            textAlign="center"
+          >
+            Login to your account
+          </Typography>
 
+          <form onSubmit={HandleSubmit} noValidate>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              margin="normal"
+              value={User.Email}
+              onChange={(e) => setUser({ ...User, Email: e.target.value })}
+              error={Boolean(errors.Email)}
+              helperText={errors.Email}
+              autoFocus
+            />
 
-            <form onSubmit={HandleSubmit}>
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              variant="outlined"
+              margin="normal"
+              value={User.Pass}
+              onChange={(e) => setUser({ ...User, Pass: e.target.value })}
+              error={Boolean(errors.Pass)}
+              helperText={errors.Pass}
+            />
 
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+              <MuiLink
+                component="button"
+                variant="body2"
+                sx={{ cursor: "pointer", color: "#2874f0" }}
+                onClick={() => toast.info("Forgot password feature coming soon!")}
+              >
+                Forgot password?
+              </MuiLink>
+            </Box>
 
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              sx={{ bgcolor: "#fb641b", "&:hover": { bgcolor: "#e55300" }, py: 1.5, fontWeight: "bold", mb: 2 }}
+            >
+              Login
+            </Button>
 
-
-              {/* Email */}
-              <div style={{ marginBlock: '30px' }}>
-                <label htmlFor="email">Email</label> <br />
-                <input
-                
-                  type="email"
-                  className="InputField"
-                  value={User.Email}
-                  onChange={(e) => setUser({ ...User, Email: e.target.value })}
-                /> <br />
-
-                {errors.Email && <span style={{ color: 'red', fontSize: '13px' }}>{errors.Email}</span>}
-              </div>
-
-              {/* Password */}
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <label htmlFor="password" >Password</label>
-                  <label style={{ textAlign: "end", color: "blue" }} >forget password?</label>
-
-
-
-                </div>
-                <input
-                  type="password"
-                  className="InputField"
-                  value={User.Pass}
-                  onChange={(e) => setUser({ ...User, Pass: e.target.value })}
-                /> <br />
-                {errors.Pass && <span style={{ color: 'red', fontSize: '13px' }}>{errors.Pass}</span>}
-              </div>
-
-              <div style={{ textAlign: 'center' }}>
-                <input type="submit" value="Log in" style={{ marginBlock: 10, padding: "10px", backgroundColor: "orangered", color: "white", border: "none", borderRadius: 5 }} />
-                <Typography>Create an account ? <span style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}>  <NavLink to='/signin'>signup</NavLink></span></Typography>
-              </div>
-            </form>
-          </Grid>
-        </Grid>
-
-      </Grid>
+            <Typography textAlign="center" variant="body2">
+              New to Flipkart?{" "}
+              <NavLink
+                to="/signin"
+                style={{ color: "#2874f0", textDecoration: "none", fontWeight: "bold" }}
+                onClick={handleClose} // close modal when going to sign up
+              >
+                Create an account
+              </NavLink>
+            </Typography>
+          </form>
+        </Box>
+      </Modal>
     </>
   );
 }

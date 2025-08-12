@@ -131,18 +131,18 @@ function SearchProductDetails() {
             onError={(e) => (e.currentTarget.src = DefaultTvImg)}
           />
 
-          <Box display="flex" justifyContent="space-evenly">
-            <Button
-              sx={{ border: "1px solid black" }}
+          <Grid container display="flex" justifyContent="space-evenly">
+            <Grid size={3.5}
+              sx={{ border: "1px solid black", textAlign:'center' ,py:1.5}}
               onClick={() =>
                 toast.info("🛒 Feature coming soon!", { autoClose: 1500 })
               }
             >
               <GrCart style={{ fontSize: "30px" }} />
-            </Button>
+            </Grid>
 
-            <Button
-              sx={{ border: "1px solid black" }}
+            <Grid size={3.5}
+              sx={{ border: "1px solid black", textAlign:'center' ,py:1.5 }}
               onClick={() =>
                 toast.info("💳 EMI option will be available soon", {
                   autoClose: 1500
@@ -150,10 +150,10 @@ function SearchProductDetails() {
               }
             >
               Pay with EMI
-            </Button>
+            </Grid>
 
-            <Button
-              sx={{ backgroundColor: "orangered", color: "white" }}
+            <Grid size={3.5}
+              sx={{ backgroundColor: "orangered", color: "white" ,textAlign:'center' ,py:1.5,borderRadius:1 }}
               onClick={() => {
                 if (alreadyInCart) {
                   toast.info("📦 Already in your cart", { autoClose: 1500 });
@@ -164,8 +164,8 @@ function SearchProductDetails() {
               }}
             >
               <AiFillThunderbolt style={{ marginRight: "5px" }} /> Buy Now
-            </Button>
-          </Box>
+            </Grid>
+          </Grid>
         </Grid>
 
         {/* Product Details */}

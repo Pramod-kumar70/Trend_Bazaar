@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SellerDashboard from './component/SellerDashboard/SellerDashboard';
 import AddNewProduct from './component/AddNewProduct/AddNewProduct';
+import Profile from './component/Profile/Profile';
 function App() {
 
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signin' element={<SignIn />} />
+        <Route path='/profile' element= { <Profile/> } />
         <Route path='/BecomeaSeller' element={<BecomeASeller />} />
         <Route path='/cart/Details/MyCart' element={<MyCart />} />
         <Route path='/:id' element={<ProductDetails />} />

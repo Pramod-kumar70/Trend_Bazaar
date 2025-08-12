@@ -69,7 +69,7 @@ function MyCart() {
   }
 
   return (
-    <div style={{ backgroundColor: "#f9f9f9", minHeight: "100vh", marginTop:"90px" }}>
+    <div style={{ backgroundColor: "#f9f9f9", minHeight: "100vh", paddingTop:"90px" }}>
       <Navbar Bgcolor='#2874f0' TextColor='white' ImageSrc={FlipkartSecImg} imageWidth="40px" />
 
       {/* User Info */}
@@ -92,7 +92,7 @@ function MyCart() {
         </Box>
       )}
 
-      <Grid container spacing={3} px={{ xs: 2, md: 3 }} pb={4} mt={4}>
+      <Grid container spacing={3} px={{ xs: 2, md: 3 }} pb={4} >
         {/* Cart Items */}
         <Grid item xs={12} md={8}>
           {cartItems.length === 0 ? (

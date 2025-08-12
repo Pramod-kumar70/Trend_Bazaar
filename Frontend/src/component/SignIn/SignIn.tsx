@@ -1,23 +1,22 @@
-import { Grid, Typography } from "@mui/material";
-import './SignIn.css';
-import { useState } from "react";
+import { Grid, Typography, TextField, Button, Box, Paper, Stack, FormHelperText } from "@mui/material";
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useState } from "react";
 import Navbar from './../Navbar/Navbar';
+import { toast } from "react-toastify";
 
 export default function SignIn() {
-
   const [User, setUser] = useState({
     fullName: "",
     Email: "",
     Pass: "",
-    ProfileImage: "" // ✅ Image URL store karne ke liye
+    ProfileImage: ""
   });
 
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
-  // ✅ Cloudinary pe image upload function
+  // Cloudinary image upload
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -25,8 +24,8 @@ export default function SignIn() {
 
     const data = new FormData();
     data.append("file", file);
-    data.append("upload_preset", "my_preset"); // 🔹 tumhara preset name
-    data.append("cloud_name", "dxqdd6faa");    // 🔹 tumhara cloud name
+    data.append("upload_preset", "my_preset");
+    data.append("cloud_name", "dxqdd6faa");
 
     try {
       const res = await fetch(
@@ -46,7 +45,7 @@ export default function SignIn() {
     }
   };
 
-  async function HandleSubmit(e) {
+  const HandleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -72,105 +71,122 @@ export default function SignIn() {
           name: User.fullName,
           email: User.Email,
           password: User.Pass,
-          profileImage: User.ProfileImage // ✅ DB me image ka URL bhejna
+          profileImage: User.ProfileImage
         })
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert("User signed up successfully!");
-        console.log("Response:", data);
+       toast.success("User signed up successfully!");
         setUser({ fullName: "", Email: "", Pass: "", ProfileImage: "" });
         navigate('/');
       } else {
         alert("Error: " + data.message);
       }
-
     } catch (error) {
       console.error("Error while sending request:", error);
       alert("Something went wrong. Please try again.");
     }
-  }
+  };
 
   return (
     <>
       <Navbar />
-      <Grid container justifyContent={'center'} mt={'80px'}>
-        <Grid size={2} bgcolor={'blue'} color={'white'} p={4} boxShadow={3}>
-          <Typography variant="h4" fontWeight={'bold'}>Sign In</Typography>
-          <Typography my={3}>Get access to your Orders, Wishlist and Recommendations</Typography>
-          <img src="https://flickart-aashish.vercel.app/assets/auth-5b5fdc9c.png" width={'100%'} alt="" />
+      <Grid container justifyContent="center" sx={{ mt: 10, px: 2 }}>
+        {/* Left Info Panel */}
+        <Grid size={3} sx={{ bgcolor: '#1976d2', color: '#fff', p: 4, borderRadius: 2, boxShadow: 3 }}>
+          <Typography variant="h4" fontWeight="bold" gutterBottom>Sign Up</Typography>
+          <Typography mb={3} fontSize="1.1rem">
+            Create your account to access your Orders, Wishlist, and personalized Recommendations.
+          </Typography>
+          <Box
+            component="img"
+            src="https://flickart-aashish.vercel.app/assets/auth-5b5fdc9c.png"
+            alt="Sign up illustration"
+            sx={{ width: '100%', borderRadius: 2, boxShadow: 4 }}
+          />
         </Grid>
 
-        <Grid size={3.5} container padding={3} boxShadow={3} justifyContent={'center'}>
-          <Grid size={11}>
-            <form onSubmit={HandleSubmit}>
-
-              {/* Full Name */}
-              <div>
-                <label style={{ fontWeight: 'bold' }}>Full name</label> <br />
-                <input
-                  type="text"
-                  className="InputField"
+        {/* Form Panel */}
+        <Grid size={5} sx={{ mt: { xs: 4, md: 0 }, p: 4 }}>
+          <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
+            <form onSubmit={HandleSubmit} noValidate>
+              <Stack spacing={3}>
+                <TextField
+                  label="Full Name"
+                  variant="outlined"
+                  fullWidth
                   value={User.fullName}
                   onChange={(e) => setUser({ ...User, fullName: e.target.value })}
-                /> <br />
-                {errors.fullName && <span style={{ color: 'red', fontSize: '13px' }}>{errors.fullName}</span>}
-              </div>
+                  error={Boolean(errors.fullName)}
+                  helperText={errors.fullName}
+                  required
+                />
 
-              {/* Email */}
-              <div style={{ marginBlock: '20px' }}>
-                <label style={{ fontWeight: 'bold' }}>Email</label> <br />
-                <input
+                <TextField
+                  label="Email"
                   type="email"
-                  className="InputField"
+                  variant="outlined"
+                  fullWidth
                   value={User.Email}
                   onChange={(e) => setUser({ ...User, Email: e.target.value })}
-                /> <br />
-                {errors.Email && <span style={{ color: 'red', fontSize: '13px' }}>{errors.Email}</span>}
-              </div>
+                  error={Boolean(errors.Email)}
+                  helperText={errors.Email}
+                  required
+                />
 
-              {/* Password */}
-              <div>
-                <label style={{ fontWeight: 'bold' }}>Password</label> <br />
-                <input
+                <TextField
+                  label="Password"
                   type="password"
-                  className="InputField"
+                  variant="outlined"
+                  fullWidth
                   value={User.Pass}
                   onChange={(e) => setUser({ ...User, Pass: e.target.value })}
-                /> <br />
-                {errors.Pass && <span style={{ color: 'red', fontSize: '13px' }}>{errors.Pass}</span>}
-              </div>
-
-              {/* Profile Image Upload */}
-              <div style={{ marginBlock: '20px' }}>
-                <label style={{ fontWeight: 'bold' }}>Profile Image</label> <br />
-                <input type="file" accept="image/*" onChange={handleImageUpload} />
-                {uploading && <p>Uploading image...</p>}
-                {User.ProfileImage && (
-                  <div style={{ marginTop: '10px' }}>
-                    <img src={User.ProfileImage} alt="Preview" width="100" />
-                  </div>
-                )}
-                {errors.ProfileImage && <span style={{ color: 'red', fontSize: '13px' }}>{errors.ProfileImage}</span>}
-              </div>
-
-              <div style={{ textAlign: 'center' }}>
-                <input
-                  type="submit"
-                  value={uploading ? "Uploading..." : "Sign In"}
-                  disabled={uploading}
-                  style={{ marginBlock: 10, padding: "10px", backgroundColor: "orangered", color: "white", border: "none", borderRadius: 5 }}
+                  error={Boolean(errors.Pass)}
+                  helperText={errors.Pass}
+                  required
                 />
-                <Typography>
-                  Already have an account? <span style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}>
-                    <NavLink to='/login'>Log in</NavLink>
-                  </span>
-                </Typography>
-              </div>
+
+                <Box>
+                  <Typography mb={1} fontWeight="bold">Profile Image</Typography>
+                  <Button variant="contained" component="label" disabled={uploading}>
+                    {uploading ? "Uploading..." : "Upload Image"}
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                    />
+                  </Button>
+                  {errors.ProfileImage && (
+                    <FormHelperText error>{errors.ProfileImage}</FormHelperText>
+                  )}
+                  {User.ProfileImage && (
+                    <Box mt={2}>
+                      <img
+                        src={User.ProfileImage}
+                        alt="Profile preview"
+                        style={{ width: 120, height: 120, objectFit: "cover", borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
+                      />
+                    </Box>
+                  )}
+                </Box>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  sx={{ bgcolor: "orangered", fontWeight: "bold", py: 1.5, "&:hover": { bgcolor: "#e55300" } }}
+                  disabled={uploading}
+                >
+                  {uploading ? "Please wait..." : "Sign Up"}
+                </Button>
+
+                
+              </Stack>
             </form>
-          </Grid>
+          </Paper>
         </Grid>
       </Grid>
     </>
