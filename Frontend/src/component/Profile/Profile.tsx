@@ -110,7 +110,7 @@ export default function Profile() {
     <>
       <Navbar />
       <Box sx={{ maxWidth: 900, mx: "auto", p: 3 }}>
-        <Typography variant="h4" gutterBottom>My Profile</Typography>
+        <Typography variant="h4" gutterBottom>My Profile hi</Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={4} textAlign="center">
