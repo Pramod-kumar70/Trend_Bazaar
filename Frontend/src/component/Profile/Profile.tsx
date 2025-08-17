@@ -1,184 +1,486 @@
-// src/pages/Profile.jsx
-import React, { useEffect, useState } from "react";
-import Navbar from "../Navbar/Navbar";
-import { Box, Avatar, Button, CircularProgress, Grid, TextField, Typography } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Divider,
+  Grid,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  TextField,
+  Typography,
+  Tooltip,
+  Chip,
+  Skeleton,
+} from "@mui/material";
+import {
+  FavoriteBorder,
+  LocationOnOutlined,
+  LockOutlined,
+  Logout,
+  ReceiptLongOutlined,
+  SettingsOutlined,
+  ShoppingCartOutlined,
+  StarBorderOutlined,
+  SupportAgentOutlined,
+  CameraAlt,
+} from "@mui/icons-material";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Navbar from "../Navbar/Navbar";
+import FlipkartSecImg from "../../assets/F4.png"
+
+// ---- Flipkart Theme Colors ----
+const FK_BLUE = "#2874f0";
+const FK_BLUE_DARK = "#1f5ed1";
+const FK_YELLOW = "#ffe11b";
+const CARD_BG = "#ffffff";
+const BG = "#f1f3f6";
 
 export default function Profile() {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "" });
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
   const token = localStorage.getItem("token");
 
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [pwdSaving, setPwdSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const [user, setUser] = useState(null);
+  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "" });
+  const [imagePreview, setImagePreview] = useState("");
+  const [editMode, setEditMode] = useState(false);
+
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: "",
+  });
+
+  // -------- Fetch Profile --------
   useEffect(() => {
-    fetchProfile();
-    // eslint-disable-next-line
+    (async () => {
+      try {
+        const res = await axios.get("http://localhost:3001/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data);
+        setForm({
+          name: res.data.name || "",
+          email: res.data.email || "",
+          phone: res.data.phone || "",
+          address: res.data.address || "",
+          profileImage: res.data.profileImage || "",
+        });
+        setImagePreview(res.data.profileImage || "");
+      } catch (err) {
+        console.error(err);
+        toast.error(err.response?.data?.message || "Failed to load profile");
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchProfile = async () => {
-    setLoading(true);
+  // -------- Cloudinary Upload (signin जैसा) --------
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "my_preset"); // <- your preset
+    data.append("cloud_name", "dxqdd6faa");    // <- your cloud name
+
     try {
-      if (!token) {
-        toast.info("Please login first");
-        setLoading(false);
-        return;
+      const res = await fetch("https://api.cloudinary.com/v1_1/dxqdd6faa/image/upload", {
+        method: "POST",
+        body: data,
+      });
+      const uploaded = await res.json();
+      if (uploaded.secure_url) {
+        setImagePreview(uploaded.secure_url);
+        setForm((f) => ({ ...f, profileImage: uploaded.secure_url }));
+        toast.success("Photo uploaded");
+      } else {
+        toast.error("Image upload failed");
       }
-      const res = await axios.get("http://localhost:3001/users/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(res.data);
-      setForm({
-        name: res.data.name || "",
-        email: res.data.email || "",
-        phone: res.data.phone || "",
-        address: res.data.address || ""
-      });
-      setImagePreview(res.data.profileImage || "");
     } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.message || "Failed to load profile");
+      console.error("Image upload error:", err);
+      toast.error("Image upload failed");
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
 
-  const handleImageSelect = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
-
+  // -------- Save Profile --------
   const handleSave = async () => {
+    setSaving(true);
     try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("phone", form.phone || "");
-      formData.append("address", form.address || "");
-      // email included optionally:
-      formData.append("email", form.email || "");
-      if (imageFile) {
-        formData.append("profileImage", imageFile); // multer will handle
-      }
-
-      const res = await axios.put("http://localhost:3001/users/profile", formData, {
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      const res = await axios.put("http://localhost:3001/users/profile", form, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       setUser(res.data);
-      // update localStorage - keep key consistent with your app
       localStorage.setItem("user", JSON.stringify(res.data));
-      localStorage.setItem("userDetails", JSON.stringify(res.data)); // whichever you use
       toast.success("Profile updated");
       setEditMode(false);
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "Update failed");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
+  // -------- Change Password --------
+  const handlePasswordChange = async () => {
+    if (!passwordData.oldPassword || !passwordData.newPassword) {
+      toast.error("Please fill both password fields");
+      return;
+    }
+    setPwdSaving(true);
+    try {
+      await axios.put("http://localhost:3001/users/change-password", passwordData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      toast.success("Password updated");
+      setPasswordData({ oldPassword: "", newPassword: "" });
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Password change failed");
+    } finally {
+      setPwdSaving(false);
+    }
+  };
+
+  const memberSince = useMemo(() => {
+    if (!user?._id) return "Member";
+    // Dummy text like Flipkart (no exact date known)
+    return "Member since 2025";
+  }, [user]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    toast.success("Logged out");
+    window.location.href = "/"; // or navigate if using router
+  };
+
+  // -------- UI --------
   if (loading) {
     return (
-      <>
-        <Navbar />
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-          <CircularProgress />
-        </Box>
-      </>
-    );
-  }
-
-  if (!user) {
-    return (
-      <>
-        <Navbar />
-        <Box p={4} textAlign="center">
-          <Typography variant="h6">No user data. Please login.</Typography>
-        </Box>
-      </>
+      <Box sx={{ minHeight: "70vh", bgcolor: BG, display: "grid", placeItems: "center" }}>
+        <CircularProgress />
+      </Box>
     );
   }
 
   return (
-    <>
-      <Navbar />
-      <Box sx={{ maxWidth: 900, mx: "auto", p: 3 }}>
-        <Typography variant="h4" gutterBottom>My Profile hi</Typography>
+    <Box sx={{ bgcolor: BG, minHeight: "100vh", pb: 6 }}>
+      {/* Header strip */}
+     <Navbar Bgcolor='#2874f0' TextColor='white' ImageSrc={FlipkartSecImg} imageWidth="40px" />
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={4} textAlign="center">
-            <Avatar
-              src={imagePreview || "https://via.placeholder.com/150"}
-              alt={user.name}
-              sx={{ width: 140, height: 140, mx: "auto" }}
-            />
-            {editMode && (
-              <Box mt={2}>
-                <Button component="label" variant="outlined">
-                  Change Photo
-                  <input type="file" hidden accept="image/*" onChange={handleImageSelect} />
+      
+        <Grid container justifyContent={'space-evenly'} pt={'90px'}>
+          {/* Left Sidebar */}
+          <Grid size={3}>
+            <Paper elevation={0} sx={{ borderRadius: 2, overflow: "hidden" }}>
+              {/* Profile card */}
+              <Box sx={{ bgcolor: CARD_BG, p: 2, display: "flex", alignItems: "center", gap: 2 }}>
+                {/* Avatar with overlay button */}
+                <Box sx={{ position: "relative" }}>
+                  <Avatar
+                    src={imagePreview || ""}
+                    alt={user?.name || "User"}
+                    sx={{ width: 72, height: 72, border: "2px solid #eee" }}
+                  />
+                  <Tooltip title="Change photo">
+                    <IconButton
+                      component="label"
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        right: -6,
+                        bottom: -6,
+                        bgcolor: FK_BLUE,
+                        color: "#fff",
+                        "&:hover": { bgcolor: FK_BLUE_DARK },
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                      }}
+                      disabled={!editMode || uploading}
+                    >
+                      {uploading ? (
+                        <CircularProgress size={18} sx={{ color: "#fff" }} />
+                      ) : (
+                        <CameraAlt fontSize="inherit" />
+                      )}
+                      <input hidden type="file" accept="image/*" onChange={handleImageUpload} />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: 700 }}>{user?.name || "Your Name"}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {memberSince}
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Divider />
+
+              {/* Quick Links */}
+              <List sx={{ bgcolor: CARD_BG }}>
+                <ListItemButton>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <ReceiptLongOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary="My Orders" secondary="View, track, cancel orders" />
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <FavoriteBorder />
+                  </ListItemIcon>
+                  <ListItemText primary="Wishlist" secondary="All your saved items" />
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <ShoppingCartOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary="My Cart" secondary="Checkout your items" />
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <LocationOnOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary="Saved Addresses" secondary="Manage delivery addresses" />
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <StarBorderOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary="Reviews & Ratings" secondary="Your product reviews" />
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <SupportAgentOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary="Help Center" secondary="24x7 customer support" />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton onClick={handleLogout}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <Logout color="error" />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItemButton>
+              </List>
+            </Paper>
+          </Grid>
+
+          {/* Right Content */}
+          <Grid size={8}>
+            {/* Personal Info Card */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                borderRadius: 2,
+                bgcolor: CARD_BG,
+                boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    Personal Information
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Manage your name, email, phone and address
+                  </Typography>
+                </Box>
+                {editMode ? (
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <Button
+                      variant="contained"
+                      onClick={handleSave}
+                      disabled={saving || uploading}
+                      sx={{
+                        bgcolor: FK_BLUE,
+                        "&:hover": { bgcolor: FK_BLUE_DARK },
+                        fontWeight: 700,
+                      }}
+                    >
+                      {saving ? "Saving..." : "Save"}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setEditMode(false);
+                        // reset to original user data
+                        setForm({
+                          name: user?.name || "",
+                          email: user?.email || "",
+                          phone: user?.phone || "",
+                          address: user?.address || "",
+                          profileImage: user?.profileImage || "",
+                        });
+                        setImagePreview(user?.profileImage || "");
+                      }}
+                      sx={{ fontWeight: 700 }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={() => setEditMode(true)}
+                    sx={{
+                      borderColor: FK_BLUE,
+                      color: FK_BLUE,
+                      fontWeight: 700,
+                      "&:hover": { borderColor: FK_BLUE_DARK, color: FK_BLUE_DARK },
+                    }}
+                    startIcon={<SettingsOutlined />}
+                  >
+                    Edit
+                  </Button>
+                )}
+              </Box>
+
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="Full Name"
+                    fullWidth
+                    value={form.name}
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                    disabled={!editMode}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="Email"
+                    fullWidth
+                    value={form.email}
+                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                    disabled={!editMode}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="Phone"
+                    fullWidth
+                    value={form.phone || ""}
+                    onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                    disabled={!editMode}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="Address"
+                    fullWidth
+                    value={form.address || ""}
+                    onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+                    disabled={!editMode}
+                  />
+                </Grid>
+              </Grid>
+            </Paper>
+
+            {/* Password Card */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                mt: 3,
+                borderRadius: 2,
+                bgcolor: CARD_BG,
+                boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                <LockOutlined sx={{ color: FK_BLUE }} />
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    Change Password
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Keep your account secure by updating your password
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="Old Password"
+                    fullWidth
+                    type="password"
+                    value={passwordData.oldPassword}
+                    onChange={(e) =>
+                      setPasswordData((p) => ({ ...p, oldPassword: e.target.value }))
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="New Password"
+                    fullWidth
+                    type="password"
+                    value={passwordData.newPassword}
+                    onChange={(e) =>
+                      setPasswordData((p) => ({ ...p, newPassword: e.target.value }))
+                    }
+                  />
+                </Grid>
+              </Grid>
+
+              <Box sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={handlePasswordChange}
+                  disabled={pwdSaving}
+                  sx={{
+                    bgcolor: FK_BLUE,
+                    "&:hover": { bgcolor: FK_BLUE_DARK },
+                    fontWeight: 700,
+                  }}
+                >
+                  {pwdSaving ? "Updating..." : "Update Password"}
                 </Button>
               </Box>
-            )}
+            </Paper>
+
+            {/* Perks / Info band (Flipkart vibe) */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                mt: 3,
+                borderRadius: 2,
+                display: "flex",
+                gap: 2,
+                flexWrap: "wrap",
+                alignItems: "center",
+                bgcolor: "#e8f0fe",
+                border: "1px solid #d6e2ff",
+              }}
+            >
+              <Chip label="Secure Payments" />
+              <Chip label="Easy Returns" />
+              <Chip label="24x7 Support" />
+              <Chip label="Genuine Products" />
+            </Paper>
           </Grid>
 
-          <Grid item xs={12} md={8}>
-            <TextField
-              fullWidth
-              label="Name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              disabled={!editMode}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              disabled={!editMode}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Phone"
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              disabled={!editMode}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Address"
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              disabled={!editMode}
-              sx={{ mb: 2 }}
-            />
-
-            {editMode ? (
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <Button variant="contained" onClick={handleSave}>Save</Button>
-                <Button variant="outlined" onClick={() => { setEditMode(false); setForm({
-                  name: user.name || "",
-                  email: user.email || "",
-                  phone: user.phone || "",
-                  address: user.address || ""
-                }); setImageFile(null); setImagePreview(user.profileImage || ""); }}>Cancel</Button>
-              </Box>
-            ) : (
-              <Button variant="contained" onClick={() => setEditMode(true)}>Edit Profile</Button>
-            )}
-          </Grid>
         </Grid>
-      </Box>
-    </>
+     
+    </Box>
   );
 }

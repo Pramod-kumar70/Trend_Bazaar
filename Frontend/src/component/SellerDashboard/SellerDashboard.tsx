@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Avatar,
-  Button,
-  IconButton,
-  TextField,
-  Select,
-  MenuItem,
-  InputAdornment,
+import {Box,Avatar,Button,IconButton,TextField,Select,MenuItem, InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";

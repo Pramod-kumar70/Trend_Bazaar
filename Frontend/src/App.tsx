@@ -6,7 +6,6 @@ import ProductDetails from './component/ProductDetails/ProductDetails';
 import SearchControl from './component/SearchControl/SearchControl';
 import SearchProductDetails from './component/SearchProductDetails/SearchProductDetails';
 import Login from './component/Login/Login';
-import SignIn from './component/SignIn/SignIn';
 import MyCart from './component/MyCart/MyCart';
 import BecomeASeller from './component/BecomeASeller/BecomeASeller';
 import { ToastContainer } from "react-toastify";
@@ -14,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import SellerDashboard from './component/SellerDashboard/SellerDashboard';
 import AddNewProduct from './component/AddNewProduct/AddNewProduct';
 import Profile from './component/Profile/Profile';
+import Signup from './component/Signup/Signup';
 function App() {
 
   return (
@@ -22,7 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/signin' element={<SignIn />} />
+        <Route path='/signup' element={<Signup />} />
         <Route path='/profile' element= { <Profile/> } />
         <Route path='/BecomeaSeller' element={<BecomeASeller />} />
         <Route path='/cart/Details/MyCart' element={<MyCart />} />
