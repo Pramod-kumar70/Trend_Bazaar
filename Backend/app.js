@@ -6,10 +6,13 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
 const mongoose = require('mongoose');
-
+const dotenv = require('dotenv')
+const connectDB = require("./DBConnection.js")
 
 
 // Route imports
+dotenv.config()
+const URI = process.env.MONGO_URI;
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const productRoute = require('./routes/productRoute'); // ✅ Make sure this file exports router
@@ -21,15 +24,6 @@ const app = express();
 
 
 // MongoDB Connection
-const URI = "mongodb+srv://TestUser70:TestUserPass7070@cluster0ne.4hhjel9.mongodb.net/Products?retryWrites=true&w=majority&appName=Cluster0ne";
-async function connectDB() {
-  try {
-    await mongoose.connect(URI);
-    console.log('✅ Connected to MongoDB');
-  } catch (err) {
-    console.error('❌ MongoDB connection failed:', err);
-  }
-}
 connectDB();
 
 // View engine setup
