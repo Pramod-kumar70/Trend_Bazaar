@@ -32,7 +32,6 @@ app.set('view engine', 'jade');
 
 
 
-
 // Middlewares
 app.use(logger('dev'));
 app.use(cors())

@@ -5,7 +5,6 @@ dotenv.config();
 const user = process.env.USERID;
 const pass = process.env.PASS;
 const dbName = process.env.DBNAME;
-const PORT = process.env.PORT;
 
 // Construct Mongo URI
 const URI = `mongodb+srv://${user}:${pass}@cluster0ne.4hhjel9.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0ne`;
@@ -13,7 +12,7 @@ const URI = `mongodb+srv://${user}:${pass}@cluster0ne.4hhjel9.mongodb.net/${dbNa
 const connectDB = async () => {
   try {
     await mongoose.connect(URI);
-    console.log("MongoDB Connected Successfully! on port " ,PORT);
+    console.log("MongoDB Connected Successfully! on port " ,process.env.PORT);
   } catch (error) {
     console.error("MongoDB Connection Failed:", error.message);
     process.exit(1);

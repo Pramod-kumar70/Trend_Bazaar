@@ -14,7 +14,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import { Link as MuiLink } from "@mui/material";
-export default function Login({ open, handleClose, onSignupClick ,onLoginSuccess }) {
+import "./LogIn.css"
+export default function Login({ open, handleClose, onSignupClick, onLoginSuccess }) {
   const [User, setUser] = useState({ Email: "", Pass: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -37,19 +38,19 @@ export default function Login({ open, handleClose, onSignupClick ,onLoginSuccess
         body: JSON.stringify({ email: User.Email, password: User.Pass }),
       });
       const data = await response.json();
-     if (response.ok) {
-  toast.success("Login Successful! 🎉");
-  localStorage.setItem("token", data.token);
-  if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-  else localStorage.removeItem("user");
-  setUser({ Email: "", Pass: "" });
-  handleClose();
+      if (response.ok) {
+        toast.success("Login Successful! 🎉");
+        localStorage.setItem("token", data.token);
+        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+        else localStorage.removeItem("user");
+        setUser({ Email: "", Pass: "" });
+        handleClose();
 
-  // ✅ Agar onLoginSuccess prop diya gaya hai to call karo
-  if (typeof onLoginSuccess === "function") {
-    onLoginSuccess();
-  }
-} else {
+        // ✅ Agar onLoginSuccess prop diya gaya hai to call karo
+        if (typeof onLoginSuccess === "function") {
+          onLoginSuccess();
+        }
+      } else {
         toast.error(data.message || "Invalid email or password ❌");
       }
     } catch (error) {
@@ -72,22 +73,19 @@ export default function Login({ open, handleClose, onSignupClick ,onLoginSuccess
         <Grid container sx={{ minHeight: "70vh" }}>
           {/* Left Section */}
           <Grid
-            item
-            xs={12}
-            md={5}
+            className="BgImg"
+            size={4}
             sx={{
-              backgroundColor: "#2874f0",
+            
               color: "white",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+            
               px: 4,
-              py: 6,
-              backgroundImage:
-                "url('https://rukminim1.flixcart.com/www/800/800/promos/26/07/2019/ef7b0406-64aa-4e3c-b08e-15b6e8b6e1e1.png?q=90')",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center bottom",
-              backgroundSize: "240px",
+              py:3
+             
+             
+             
             }}
           >
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
@@ -100,9 +98,7 @@ export default function Login({ open, handleClose, onSignupClick ,onLoginSuccess
 
           {/* Right Section */}
           <Grid
-            item
-            xs={12}
-            md={7}
+            size={8}
             sx={{
               backgroundColor: "#f1f3f6",
               display: "flex",

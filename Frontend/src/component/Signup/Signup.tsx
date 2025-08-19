@@ -14,6 +14,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
+import "./SignIn.css"
 
 export default function Signup({ open, handleClose, onLoginClick }) {
   const [form, setForm] = useState({
@@ -57,22 +58,16 @@ export default function Signup({ open, handleClose, onLoginClick }) {
         <Grid container sx={{ minHeight: "70vh" }}>
           {/* Left Section */}
           <Grid
-            item
-            xs={12}
-            md={5}
+           className="BgImg"
+            size={4}
             sx={{
-              backgroundColor: "#2874f0",
+            
               color: "white",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+            
               px: 4,
-              py: 6,
-              backgroundImage:
-                "url('https://rukminim1.flixcart.com/www/800/800/promos/26/07/2019/ef7b0406-64aa-4e3c-b08e-15b6e8b6e1e1.png?q=90')",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center bottom",
-              backgroundSize: "240px",
+              py:3
             }}
           >
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
@@ -85,9 +80,7 @@ export default function Signup({ open, handleClose, onLoginClick }) {
 
           {/* Right Section */}
           <Grid
-            item
-            xs={12}
-            md={7}
+           size={8}
             sx={{
               backgroundColor: "#f1f3f6",
               display: "flex",
