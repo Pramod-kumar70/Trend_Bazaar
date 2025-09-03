@@ -9,6 +9,7 @@ var SearchedProductControllers = require("../controllers/SearchedProductControll
 // Home page (TopTrendy, Sports, MoreData)
 router.get('/', getAllProducts);
 
+
 // View All by category (toptrendy, sports, moredata)
 router.get('/viewall/:name', getProductsByCategory);
 

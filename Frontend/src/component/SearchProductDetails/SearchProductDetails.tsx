@@ -17,7 +17,7 @@ import { MdLocalOffer } from "react-icons/md";
 import { GrCart } from "react-icons/gr";
 import axios from "axios";
 import "./SearchProductDetails.css";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import DefaultTvImg from "../../assets/DTV.png";
 import FlipkartSecImg from "../../assets/F4.png"
 
@@ -32,6 +32,7 @@ function SearchProductDetails() {
   const [error, setError] = useState(null);
   const [alreadyInCart, setAlreadyInCart] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [buying, setBuying] = useState(false);
 
   // Fetch main product details
   const fetchProductDetails = async () => {
@@ -86,6 +87,7 @@ function SearchProductDetails() {
   // Buy Now click
   const handleBuyNow = async () => {
     const token = localStorage.getItem("token");
+
     if (!token) {
       toast.warn("⚠️ Please login to continue", { autoClose: 2000 });
       navigate("/login");
@@ -93,6 +95,7 @@ function SearchProductDetails() {
     }
 
     try {
+      setBuying(true); // <-- yaha loading start
       const res = await axios.post(
         "http://localhost:3001/cart/add",
         { productId: product._id, quantity: 1 },
@@ -102,6 +105,7 @@ function SearchProductDetails() {
       if (res.data.success) {
         toast.success("🛒 Item added to your cart!", { autoClose: 2000 });
         setAlreadyInCart(true);
+
         setTimeout(() => {
           navigate(`/cart/Details/MyCart`);
         }, 2000);
@@ -109,6 +113,8 @@ function SearchProductDetails() {
     } catch (error) {
       console.error(error);
       toast.error("❌ Failed to add item to cart", { autoClose: 2000 });
+    } finally {
+      setBuying(false); // <-- loading khatam
     }
   };
 
@@ -132,8 +138,8 @@ function SearchProductDetails() {
           />
 
           <Grid container display="flex" justifyContent="space-evenly">
-            <Grid size={3.5}
-              sx={{ border: "1px solid black", textAlign:'center' ,py:1.5}}
+            <Grid size={3.5} className="HoverEffect"
+              sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
                 toast.info("🛒 Feature coming soon!", { autoClose: 1500 })
               }
@@ -141,8 +147,8 @@ function SearchProductDetails() {
               <GrCart style={{ fontSize: "30px" }} />
             </Grid>
 
-            <Grid size={3.5}
-              sx={{ border: "1px solid black", textAlign:'center' ,py:1.5 }}
+            <Grid size={3.5} className="HoverEffect"
+              sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
                 toast.info("💳 EMI option will be available soon", {
                   autoClose: 1500
@@ -152,19 +158,41 @@ function SearchProductDetails() {
               Pay with EMI
             </Grid>
 
-            <Grid size={3.5}
-              sx={{ backgroundColor: "orangered", color: "white" ,textAlign:'center' ,py:1.5,borderRadius:1 }}
+            <Grid
+              size={3.5}
+              className="HoverEffect"
+              sx={{
+                backgroundColor: "orangered",
+                color: "white",
+                textAlign: "center",
+                py: 1.5,
+                borderRadius: 1,
+                cursor: buying ? "not-allowed" : "pointer",
+                opacity: buying ? 0.7 : 1
+              }}
               onClick={() => {
-                if (alreadyInCart) {
-                  toast.info("📦 Already in your cart", { autoClose: 1500 });
-                  navigate(`/cart/${product._id}`);
-                } else {
-                  handleBuyNow();
+                if (!buying) {
+                  if (alreadyInCart) {
+                    toast.warning("📦 Already in your cart", { autoClose: 1500 });
+                    navigate(`/cart/${product._id}`);
+                  } else {
+                    handleBuyNow();
+                  }
                 }
               }}
             >
-              <AiFillThunderbolt style={{ marginRight: "5px" }} /> Buy Now
+              {buying ? (
+                <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
+                  <CircularProgress size={18} sx={{ color: "white" }} />
+                  Adding...
+                </Box>
+              ) : (
+                <>
+                  <AiFillThunderbolt style={{ marginRight: "5px" }} /> Buy Now
+                </>
+              )}
             </Grid>
+
           </Grid>
         </Grid>
 
@@ -230,7 +258,7 @@ function SearchProductDetails() {
           </Typography>
           <ul type="none" className="UL">
             {Array.isArray(product.offerAvailable) &&
-            product.offerAvailable.length > 0 ? (
+              product.offerAvailable.length > 0 ? (
               product.offerAvailable.map((offer, index) => (
                 <li key={index} style={{ marginBottom: "5px" }}>
                   <MdLocalOffer style={{ color: "green", fontSize: "20px" }} />

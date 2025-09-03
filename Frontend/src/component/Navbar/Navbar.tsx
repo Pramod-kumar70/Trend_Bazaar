@@ -16,7 +16,7 @@ import { VscAccount } from "react-icons/vsc";
 import { GrCart } from "react-icons/gr";
 import { AiOutlineShop } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import "react-toastify/dist/ReactToastify.css";
 
 import Login from "../Login/Login";

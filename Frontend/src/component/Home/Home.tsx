@@ -61,15 +61,17 @@ function Home() {
   const gridItemStyle = {
     cursor: "pointer",
     padding: "10px",
-    borderRadius: "10px",
+    borderRadius: "4px",
     border: "2px solid transparent",
     backgroundColor: "white",
     transition: "all 0.3s ease",
+  
     "&:hover": {
       transform: "translateY(-3px)",
-      boxShadow: "0px 2px 20px rgba(75, 78, 78, 0.4)",
+      boxShadow: "0px 2px 6px rgba(75, 78, 78, 0.4)",
+      
     
-      backgroundColor: "#f1f6ff"
+      backgroundColor: "#f1f6ff77"
     }
   };
 

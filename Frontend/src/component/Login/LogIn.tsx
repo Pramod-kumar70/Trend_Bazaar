@@ -12,17 +12,21 @@ import {
   Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { Link as MuiLink } from "@mui/material";
-import "./LogIn.css"
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../../Firebase"; // ✅ only these imports
+import "./LogIn.css";
+import GoogleLogo from "../../assets/Google.png"
 export default function Login({ open, handleClose, onSignupClick, onLoginSuccess }) {
   const [User, setUser] = useState({ Email: "", Pass: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // ✅ Normal Email/Password Login
   async function HandleSubmit(e) {
     e.preventDefault();
-    const newErrors = {};
+    const newErrors: any = {};
     if (!User.Email.trim()) newErrors.Email = "Email is required";
     if (!User.Pass.trim()) newErrors.Pass = "Password is required";
     if (Object.keys(newErrors).length > 0) {
@@ -45,11 +49,7 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
         else localStorage.removeItem("user");
         setUser({ Email: "", Pass: "" });
         handleClose();
-
-        // ✅ Agar onLoginSuccess prop diya gaya hai to call karo
-        if (typeof onLoginSuccess === "function") {
-          onLoginSuccess();
-        }
+        if (typeof onLoginSuccess === "function") onLoginSuccess();
       } else {
         toast.error(data.message || "Invalid email or password ❌");
       }
@@ -60,6 +60,40 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
       setLoading(false);
     }
   }
+
+  // ✅ Google Login
+  const handleGoogleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    // Backend ko bhejo
+    const response = await fetch("http://localhost:3001/users/google-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      toast.success("Google Login Successful 🎉");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      handleClose();
+      if (typeof onLoginSuccess === "function") onLoginSuccess();
+    } else {
+      toast.error(data.message || "Google login failed ❌");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Google login error ❌");
+  }
+};
+
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -74,18 +108,14 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
           {/* Left Section */}
           <Grid
             className="BgImg"
-            size={4}
+            item
+            xs={4}
             sx={{
-            
               color: "white",
               display: "flex",
               flexDirection: "column",
-            
               px: 4,
-              py:3
-             
-             
-             
+              py: 3,
             }}
           >
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
@@ -98,7 +128,8 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
 
           {/* Right Section */}
           <Grid
-            size={8}
+            item
+            xs={8}
             sx={{
               backgroundColor: "#f1f3f6",
               display: "flex",
@@ -127,8 +158,8 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
                   margin="normal"
                   value={User.Email}
                   onChange={(e) => setUser({ ...User, Email: e.target.value })}
-                  error={Boolean(errors.Email)}
-                  helperText={errors.Email}
+                  error={Boolean(errors["Email"])}
+                  helperText={errors["Email"]}
                   autoFocus
                 />
                 <TextField
@@ -139,8 +170,8 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
                   margin="normal"
                   value={User.Pass}
                   onChange={(e) => setUser({ ...User, Pass: e.target.value })}
-                  error={Boolean(errors.Pass)}
-                  helperText={errors.Pass}
+                  error={Boolean(errors["Pass"])}
+                  helperText={errors["Pass"]}
                 />
 
                 <Button
@@ -162,9 +193,24 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
                   {loading ? "Logging in..." : "Login"}
                 </Button>
 
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ my: 2 }}>OR</Divider>
 
-                <Typography textAlign="center" variant="body2">
+                {/* Google Login Button */}
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={handleGoogleLogin}
+                  sx={{
+                    py: 1.5,
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    borderRadius: 1,
+                  }}
+                >
+                 <Box component='img' src={GoogleLogo} width={"20px"} mx={2} /> Continue with Google
+                </Button>
+
+                <Typography textAlign="center" variant="body2" sx={{ mt: 2 }}>
                   New to Flipkart?{" "}
                   <MuiLink
                     component="button"

@@ -12,3 +12,6 @@
 .UL>li{
     margin-block: 10px;
 }
+.HoverEffect:hover{
+    cursor: pointer;
+}

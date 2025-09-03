@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// Signup.tsx file
+
+import  { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +16,13 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
-import "./SignIn.css"
+import "./SignIn.css";
 
-export default function Signup({ open, handleClose, onLoginClick }) {
+// 👇 Firebase import
+import { auth, googleProvider } from "../../Firebase";
+import { signInWithPopup } from "firebase/auth";
+import GoogleLogo from "../../assets/Google.png"
+export default function Signup({ open = "", handleClose="", onLoginClick="" }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -46,6 +52,30 @@ export default function Signup({ open, handleClose, onLoginClick }) {
     }
   };
 
+  // 👇 Google Signup
+  // 👇 Google Signup
+const handleGoogleSignup = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    // yaha backend pe bhejo
+    await axios.post("http://localhost:3001/users/google-register", {
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL,  // optional
+      googleId: user.uid     // unique id (safe rahega)
+    });
+
+    toast.success(`Welcome ${user.displayName}`);
+    handleClose();
+  } catch (error) {
+    console.error("Google signup error:", error);
+    toast.error("Google signup failed");
+  }
+};
+
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <Box sx={{ position: "absolute", top: 10, right: 10, zIndex: 10 }}>
@@ -58,16 +88,14 @@ export default function Signup({ open, handleClose, onLoginClick }) {
         <Grid container sx={{ minHeight: "70vh" }}>
           {/* Left Section */}
           <Grid
-           className="BgImg"
-            size={4}
+            className="BgImg"
+            size={5}
             sx={{
-            
               color: "white",
               display: "flex",
               flexDirection: "column",
-            
               px: 4,
-              py:3
+              py: 3,
             }}
           >
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
@@ -80,7 +108,7 @@ export default function Signup({ open, handleClose, onLoginClick }) {
 
           {/* Right Section */}
           <Grid
-           size={8}
+            size={7}
             sx={{
               backgroundColor: "#f1f3f6",
               display: "flex",
@@ -158,13 +186,33 @@ export default function Signup({ open, handleClose, onLoginClick }) {
                 {loading ? "Creating..." : "Sign Up"}
               </Button>
 
+              {/* 👇 Extra Button Google Signup ke liye */}
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{
+                  py: 1.5,
+                  fontWeight: "bold",
+                  mb: 2,
+                  textTransform: "none",
+                  borderRadius: 1,
+                }}
+                onClick={handleGoogleSignup}
+              >
+              <Box component="img" src={GoogleLogo} width={"20px"} mx={2}  />  Sign up with Google
+              </Button>
+
               <Divider sx={{ my: 2 }} />
 
               {/* Fixed Login Link */}
               <Typography textAlign="center" variant="body2">
                 Existing User?{" "}
                 <span
-                  style={{ color: "#2874f0", fontWeight: "bold", cursor: "pointer" }}
+                  style={{
+                    color: "#2874f0",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
                   onClick={() => {
                     handleClose(); // Close signup popup
                     onLoginClick(); // Open login popup
@@ -175,6 +223,8 @@ export default function Signup({ open, handleClose, onLoginClick }) {
               </Typography>
             </Paper>
           </Grid>
+
+
         </Grid>
       </DialogContent>
     </Dialog>

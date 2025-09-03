@@ -13,15 +13,13 @@ import {
   Box,
   Divider,
   IconButton,
-  Collapse,
-  TextField,
-  Paper,
   Stepper,
   Step,
   StepLabel,
   RadioGroup,
   FormControlLabel,
-  Radio
+  Radio,
+  TextField,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -31,23 +29,20 @@ function MyCart() {
   const [user, setUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showOrderDetails, setShowOrderDetails] = useState(false);
 
-  // Stepper states
-  const steps = ["Cart", "Delivery Address", "Payment", "Confirmation"];
+  // ✅ Stepper states
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
 
-  const [orderData, setOrderData] = useState({
-    fullName: "",
-    phone: "",
-    address: "",
-    pincode: "",
-    city: "",
-    state: "",
-    paymentMethod: ""
-  });
+  // ✅ Checkout states
+  const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   const token = localStorage.getItem("token");
+
+  // Pricing (Flipkart-style demo values)
+  const deliveryCharge = 50;
+  const discount = 100;
 
   const fetchCart = async () => {
     try {
@@ -91,36 +86,33 @@ function MyCart() {
 
   const handlePlaceOrderClick = () => {
     setShowOrderDetails(true);
-    setActiveStep(1); // jump to address step
+    setActiveStep(0); // start checkout
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
-  const handleNextStep = () => {
-    if (activeStep < steps.length - 1) {
-      setActiveStep((prev) => prev + 1);
+  const totalMRP = cartItems.reduce(
+    (acc, item) => acc + item.product.price * item.quantity,
+    0
+  );
+  const finalAmount = Math.max(totalMRP + deliveryCharge - discount, 0);
+  const totalSavings = discount;
+
+  // ✅ Stepper labels
+  const steps = ["Cart", "Delivery Address", "Payment", "Confirmation"];
+
+  const handleNext = () => {
+    if (activeStep === 1 && !address) {
+      alert("Please enter delivery address");
+      return;
     }
+    if (activeStep === 2 && !paymentMethod) {
+      alert("Please select a payment method");
+      return;
+    }
+    setActiveStep((prev) => prev + 1);
   };
 
-  const handleOrderSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(
-        "http://localhost:3001/orders",
-        {
-          ...orderData,
-          items: cartItems
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-      setActiveStep(3); // move to confirmation
-      setCartItems([]);
-    } catch (error) {
-      console.error("Order failed:", error);
-      alert("❌ Order failed, please try again.");
-    }
-  };
+  const handleBack = () => setActiveStep((prev) => prev - 1);
 
   return (
     <Box sx={{ backgroundColor: "#f1f3f6", minHeight: "100vh" }}>
@@ -131,6 +123,7 @@ function MyCart() {
         imageWidth="40px"
       />
 
+      {/* Greeting */}
       {user && (
         <Box
           sx={{
@@ -138,7 +131,7 @@ function MyCart() {
             background: "#fff",
             mt: "70px",
             boxShadow: 1,
-            borderRadius: 2
+            borderRadius: 2,
           }}
         >
           <Typography variant="h5" fontWeight="bold">
@@ -152,7 +145,7 @@ function MyCart() {
 
       <Grid container spacing={3} px={{ xs: 2, md: 3 }} py={4}>
         {/* Cart Items */}
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={7}>
           {cartItems.length === 0 ? (
             <Box
               sx={{
@@ -160,7 +153,7 @@ function MyCart() {
                 p: 5,
                 textAlign: "center",
                 borderRadius: 2,
-                boxShadow: 1
+                boxShadow: 1,
               }}
             >
               <img
@@ -177,7 +170,7 @@ function MyCart() {
                   mt: 2,
                   textTransform: "none",
                   bgcolor: "#2874f0",
-                  "&:hover": { bgcolor: "#1e60c2" }
+                  "&:hover": { bgcolor: "#1e60c2" },
                 }}
               >
                 Shop Now
@@ -186,73 +179,75 @@ function MyCart() {
           ) : (
             <Grid container spacing={3}>
               {cartItems.map((item) => (
-                <Grid item xs={12} sm={6} md={4} key={item._id}>
+                <Grid item xs={12} key={item._id}>
                   <Card
                     sx={{
                       display: "flex",
-                      flexDirection: "column",
+                      flexDirection: "row",
+                      alignItems: "center",
                       borderRadius: 2,
                       boxShadow: 2,
                       transition: "0.3s",
-                      "&:hover": { boxShadow: 6 }
+                      "&:hover": { boxShadow: 6 },
+                      p: 2,
+                      backgroundColor: "#fff",
                     }}
                   >
+                    {/* Image */}
                     <Box
                       sx={{
-                        height: "220px",
+                        minWidth: 180,
+                        maxWidth: 180,
+                        height: 220,
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        backgroundColor: "#fff"
+                        borderRight: "1px solid #f0f0f0",
+                        pr: 2,
                       }}
                     >
                       <img
                         src={item.product.thumbnail}
                         alt={item.product.title}
                         style={{
-                          maxWidth: "90%",
-                          maxHeight: "90%",
-                          objectFit: "contain"
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          objectFit: "contain",
                         }}
                       />
                     </Box>
 
+                    {/* Details */}
                     <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography
-                        variant="subtitle1"
-                        fontWeight="bold"
-                        noWrap
-                        title={item.product?.title}
-                      >
-                        {item.product?.title}
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {item.product?.name || "No Title"}
                       </Typography>
+
                       <Typography
                         color="primary"
                         fontWeight="bold"
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 1, fontSize: "18px" }}
                       >
                         ₹{item.product.price}
                       </Typography>
 
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          mt: 1,
-                          gap: 1
-                        }}
-                      >
+                      {/* Quantity */}
+                      <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
                         <IconButton
                           size="small"
+                          sx={{ border: "1px solid #ccc" }}
                           onClick={() =>
                             updateQuantity(item._id, item.quantity - 1)
                           }
                         >
                           <RemoveIcon />
                         </IconButton>
-                        <Typography>{item.quantity}</Typography>
+                        <Typography fontWeight="bold" mx={1}>
+                          {item.quantity}
+                        </Typography>
                         <IconButton
                           size="small"
+                          sx={{ border: "1px solid #ccc" }}
                           onClick={() =>
                             updateQuantity(item._id, item.quantity + 1)
                           }
@@ -262,11 +257,14 @@ function MyCart() {
                       </Box>
                     </CardContent>
 
+                    {/* Remove */}
                     <CardActions>
                       <Button
                         color="error"
+                        variant="outlined"
                         startIcon={<DeleteIcon />}
                         onClick={() => handleRemove(item._id)}
+                        sx={{ textTransform: "none" }}
                       >
                         Remove
                       </Button>
@@ -280,40 +278,57 @@ function MyCart() {
 
         {/* Order Summary */}
         {cartItems.length > 0 && (
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={5}>
             <Card
               sx={{
                 p: 3,
                 position: "sticky",
                 top: 90,
-                borderRadius: 2
+                borderRadius: 2,
+                boxShadow: 2,
               }}
             >
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Price Details
               </Typography>
               <Divider sx={{ mb: 2 }} />
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                Price ({cartItems.length} item)
+
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+                <Typography>
+                  Price ({cartItems.length} item{cartItems.length > 1 ? "s" : ""})
+                </Typography>
+                <Typography>₹{totalMRP}</Typography>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+                <Typography>Discount</Typography>
+                <Typography color="success.main">- ₹{discount}</Typography>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+                <Typography>Delivery Charges</Typography>
+                <Typography>₹{deliveryCharge}</Typography>
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Typography fontWeight="bold">Total Amount</Typography>
+                <Typography fontWeight="bold">₹{finalAmount}</Typography>
+              </Box>
+
+              <Typography variant="body2" color="success.main" sx={{ mb: 2 }}>
+                You will save ₹{totalSavings} on this order!
               </Typography>
-              <Typography variant="h6" fontWeight="bold" color="success.main">
-                ₹
-                {cartItems.reduce(
-                  (acc, item) => acc + item.product.price * item.quantity,
-                  0
-                )}
-              </Typography>
+
               <Button
                 variant="contained"
                 fullWidth
                 sx={{
-                  mt: 3,
                   py: 1.2,
                   textTransform: "none",
                   fontSize: "16px",
                   borderRadius: 2,
                   bgcolor: "#fb641b",
-                  "&:hover": { bgcolor: "#e55300" }
+                  "&:hover": { bgcolor: "#e55300" },
                 }}
                 onClick={handlePlaceOrderClick}
               >
@@ -324,10 +339,10 @@ function MyCart() {
         )}
       </Grid>
 
-      {/* Stepper Checkout */}
-      <Collapse in={showOrderDetails}>
-        <Paper sx={{ p: 3, m: 3, backgroundColor: "#f9f9f9" }}>
-          <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+      {/* ✅ Stepper Checkout */}
+      {showOrderDetails && (
+        <Box sx={{ p: 3, mt: 2, background: "#fff", borderRadius: 2, boxShadow: 1 }}>
+          <Stepper activeStep={activeStep} alternativeLabel>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -335,159 +350,74 @@ function MyCart() {
             ))}
           </Stepper>
 
-          {/* Step 1 - Address */}
-          {activeStep === 1 && (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleNextStep();
-              }}
+          <Box sx={{ mt: 3 }}>
+            {activeStep === 0 && (
+              <Typography>Your cart summary is shown above 👆</Typography>
+            )}
+            {activeStep === 1 && (
+              <Box>
+                <Typography variant="h6">Enter Delivery Address</Typography>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={3}
+                  sx={{ mt: 2 }}
+                  placeholder="House No, Street, City, Pincode"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+              </Box>
+            )}
+            {activeStep === 2 && (
+              <Box>
+                <Typography variant="h6" gutterBottom>
+                  Select Payment Method
+                </Typography>
+                <RadioGroup
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                  <FormControlLabel value="cod" control={<Radio />} label="Cash on Delivery" />
+                  <FormControlLabel value="upi" control={<Radio />} label="UPI / Wallets" />
+                  <FormControlLabel value="card" control={<Radio />} label="Credit / Debit Card" />
+                  <FormControlLabel value="netbanking" control={<Radio />} label="Net Banking" />
+                </RadioGroup>
+              </Box>
+            )}
+            {activeStep === 3 && (
+              <Box>
+                <Typography variant="h6" color="success.main">
+                  ✅ Order Placed Successfully!
+                </Typography>
+                <Typography sx={{ mt: 1 }}>
+                  Payment: {paymentMethod.toUpperCase()} <br />
+                  Delivering to: {address}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+
+          {/* Navigation buttons */}
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
+            <Button
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              variant="outlined"
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Full Name"
-                    value={orderData.fullName}
-                    onChange={(e) =>
-                      setOrderData({ ...orderData, fullName: e.target.value })
-                    }
-                    required
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="Phone"
-                    value={orderData.phone}
-                    onChange={(e) =>
-                      setOrderData({ ...orderData, phone: e.target.value })
-                    }
-                    required
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="Pincode"
-                    value={orderData.pincode}
-                    onChange={(e) =>
-                      setOrderData({ ...orderData, pincode: e.target.value })
-                    }
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Address"
-                    value={orderData.address}
-                    onChange={(e) =>
-                      setOrderData({ ...orderData, address: e.target.value })
-                    }
-                    required
-                    multiline
-                    rows={2}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="City"
-                    value={orderData.city}
-                    onChange={(e) =>
-                      setOrderData({ ...orderData, city: e.target.value })
-                    }
-                    required
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="State"
-                    value={orderData.state}
-                    onChange={(e) =>
-                      setOrderData({ ...orderData, state: e.target.value })
-                    }
-                    required
-                  />
-                </Grid>
-              </Grid>
-
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                type="submit"
-                sx={{ mt: 3 }}
-              >
-                Save & Continue to Payment
+              Back
+            </Button>
+            {activeStep < steps.length - 1 && (
+              <Button variant="contained" onClick={handleNext}>
+                Continue
               </Button>
-            </form>
-          )}
-
-          {/* Step 2 - Payment */}
-          {activeStep === 2 && (
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                Select Payment Method
-              </Typography>
-              <RadioGroup
-                value={orderData.paymentMethod}
-                onChange={(e) =>
-                  setOrderData({ ...orderData, paymentMethod: e.target.value })
-                }
-              >
-                <FormControlLabel value="upi" control={<Radio />} label="UPI" />
-                <FormControlLabel
-                  value="card"
-                  control={<Radio />}
-                  label="Credit/Debit Card"
-                />
-                <FormControlLabel
-                  value="cod"
-                  control={<Radio />}
-                  label="Cash on Delivery"
-                />
-              </RadioGroup>
-              <Button
-                variant="contained"
-                color="success"
-                fullWidth
-                sx={{ mt: 3 }}
-                onClick={() => handleOrderSubmit()}
-              >
-                Confirm & Place Order
-              </Button>
-            </Box>
-          )}
-
-          {/* Step 3 - Confirmation */}
-          {activeStep === 3 && (
-            <Box textAlign="center">
-              <Typography variant="h5" color="success.main" gutterBottom>
-                ✅ Order Placed Successfully!
-              </Typography>
-              <Typography variant="body1">
-                Thank you for shopping with us.
-              </Typography>
-              <Button
-                variant="contained"
-                sx={{ mt: 3 }}
-                onClick={() => {
-                  setShowOrderDetails(false);
-                  setActiveStep(0);
-                }}
-              >
-                Continue Shopping
-              </Button>
-            </Box>
-          )}
-        </Paper>
-      </Collapse>
+            )}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 
+  // Remove
   async function handleRemove(cartItemId) {
     try {
       await axios.delete(`http://localhost:3001/cart/remove/${cartItemId}`, {
@@ -499,6 +429,7 @@ function MyCart() {
     }
   }
 
+  // Quantity Update
   async function updateQuantity(cartItemId, newQty) {
     if (newQty < 1) return;
     try {

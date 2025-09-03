@@ -154,4 +154,115 @@ router.put("/change-password", authMiddleware, async (req, res) => {
 });
 
 
+
+
+
+// Google register
+router.post("/google-register", async (req, res) => {
+  try {
+    const { name, email, photo } = req.body;
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        password: "google-oauth",   // 👈 required hai, to ek dummy string dal do
+        profileImage: photo         // 👈 photo ko profileImage mein map karo
+      });
+      await user.save();
+    }
+
+    // ✅ JWT token generate karte hain
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET || "mySecretKey",
+      { expiresIn: "7d" }
+    );
+
+    return res.status(200).json({
+      message: "Google signup success",
+      user,
+      token
+    });
+  } catch (error) {
+    console.error("Google signup error:", error);
+    return res.status(500).json({
+      message: "Error in Google signup",
+      error: error.message
+    });
+  }
+});
+
+
+
+
+
+
+// Google Login
+router.post("/google-login", async (req, res) => {
+  try {
+    const { name, email, photo } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required", success: false });
+    }
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Agar user nahi hai toh naya bana do
+      user = new User({
+        name: name || "Google User",
+        email,
+        password: "google-oauth",  // dummy password
+        profileImage: photo || ""
+      });
+      await user.save();
+    }
+
+    // JWT token generate karo
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      JWT_Secret,
+      { expiresIn: "7d" }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Google login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profileImage: user.profileImage
+      },
+      token
+    });
+  } catch (error) {
+    console.error("Google login error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error in Google login",
+      error: error.message
+    });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
+
+
