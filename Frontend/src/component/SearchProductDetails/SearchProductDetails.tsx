@@ -19,7 +19,7 @@ import axios from "axios";
 import "./SearchProductDetails.css";
 import { toast } from "sonner";
 import DefaultTvImg from "../../assets/DTV.png";
-import FlipkartSecImg from "../../assets/F4.png"
+import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 
 function SearchProductDetails() {
   const { id, name } = useParams();
@@ -120,7 +120,7 @@ function SearchProductDetails() {
 
   return (
     <div>
-      <Navbar Bgcolor='#2874f0' TextColor='white' ImageSrc={FlipkartSecImg} imageWidth="40px" />
+      <Navbar Bgcolor='#a8d5e2' TextColor='black' ImageSrc={FlipkartSecImg} imageWidth="40px" />
       <Grid container justifyContent={"space-evenly"} mt={"90px"}>
         {/* Product Image + Buttons */}
         <Grid size={4}>

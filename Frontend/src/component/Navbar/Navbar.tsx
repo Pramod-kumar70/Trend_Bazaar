@@ -21,7 +21,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Login from "../Login/Login";
 import Signup from "../Signup/Signup";
-import logoimg from "../../assets/images.png";
+import logoimg from "../../assets/chatgptcrp.png";
 
 const Search = styled("div")(() => ({
   position: "relative",
@@ -57,7 +57,7 @@ const SearchIconWrapper = styled("div")(() => ({
   borderBottomRightRadius: "2px",
 }));
 
-export default function Navbar({Bgcolor="White" ,TextColor="Black" ,ImageSrc = logoimg ,  imageWidth = "90px"}) {
+export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", ImageSrc = logoimg, imageWidth = "130px" }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -69,6 +69,7 @@ export default function Navbar({Bgcolor="White" ,TextColor="Black" ,ImageSrc = l
   const [openLogin, setOpenLogin] = useState(false);
   const [openSignup, setOpenSignup] = useState(false);
   const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
+  const [moreAnchor, setMoreAnchor] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -90,12 +91,12 @@ export default function Navbar({Bgcolor="White" ,TextColor="Black" ,ImageSrc = l
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 }}>
+      <AppBar position="fixed" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 }}>
         <Toolbar sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           {/* Logo */}
           <Box
             component="img"
-            src={ ImageSrc}
+            src={ImageSrc}
             alt="Logo"
             sx={{ width: imageWidth, cursor: "pointer", borderRadius: 1.5 }}
             onClick={() => navigate("/")}
@@ -114,7 +115,7 @@ export default function Navbar({Bgcolor="White" ,TextColor="Black" ,ImageSrc = l
             </SearchIconWrapper>
           </Search>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto"  }}>
             <Typography
               sx={{ cursor: "pointer", fontWeight: 500 }}
               onClick={() => window.open("/BecomeaSeller", "_blank")}
@@ -122,11 +123,51 @@ export default function Navbar({Bgcolor="White" ,TextColor="Black" ,ImageSrc = l
               <AiOutlineShop style={{ marginRight: "5px" }} /> Become a Seller
             </Typography>
 
-            <Typography
-              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" } }}
-            >
-              More ▼
-            </Typography>
+            {/* More Dropdown */}
+            {/* More Dropdown */}
+            {/* More Dropdown */}
+            <Box>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                  fontWeight: 500,
+                  display: "flex",
+                  alignItems: "center",
+                  "&:hover": { color: "#2874f0" }, // Flipkart hover effect
+                }}
+                onClick={(e) =>
+                  setMoreAnchor(moreAnchor ? null : e.currentTarget) // toggle on click
+                }
+              >
+                More {moreAnchor ? "▲" : "▼"}
+              </Typography>
+
+              <Menu
+                anchorEl={moreAnchor}
+                open={Boolean(moreAnchor)}
+                onClose={() => setMoreAnchor(null)}
+                disableScrollLock={true}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    minWidth: 220,
+                    borderRadius: 1.5,
+                    boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
+                    "& .MuiMenuItem-root": {
+                      fontSize: "0.9rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    },
+                  },
+                }}
+              >
+                <MenuItem onClick={() => setMoreAnchor(null)}>🔔 Notification Preferences</MenuItem>
+                <MenuItem onClick={() => setMoreAnchor(null)}>📞 24x7 Customer Care</MenuItem>
+                <MenuItem onClick={() => setMoreAnchor(null)}>📢 Advertise</MenuItem>
+                <MenuItem onClick={() => setMoreAnchor(null)}>⬇️ Download App</MenuItem>
+              </Menu>
+            </Box>
 
             <Typography
               sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
@@ -177,7 +218,7 @@ export default function Navbar({Bgcolor="White" ,TextColor="Black" ,ImageSrc = l
       {/* Login Popup */}
       {openLogin && (
         <Login
-         onLoginSuccess={() => window.location.reload()}
+          onLoginSuccess={() => window.location.reload()}
           open={openLogin}
           handleClose={() => setOpenLogin(false)}
           onSignupClick={() => {

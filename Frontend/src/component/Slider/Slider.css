@@ -1,0 +1,16 @@
+/* Flipkart-style dots */
+.carousel-indicators {
+  bottom: -10px; /* Dots ko thoda neeche karna */
+}
+
+.carousel-indicators [data-bs-target] {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #c0c0c0; /* Inactive dot */
+  margin: 0 4px;
+}
+
+.carousel-indicators .active {
+  background-color: #2874f0; /* Flipkart blue for active */
+}

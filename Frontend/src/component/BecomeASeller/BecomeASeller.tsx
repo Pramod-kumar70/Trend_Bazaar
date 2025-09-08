@@ -19,7 +19,7 @@ import "./BecomeASeller.css";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import FlipkartSecImg from "../../assets/F4.png"
+import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 import { useNavigate } from "react-router-dom";
 
 export default function BecomeASeller() {
@@ -155,7 +155,7 @@ export default function BecomeASeller() {
 
   return (
     <Box sx={{ backgroundColor: "#f4f6f8" }} mt="60px">
-      <Navbar Bgcolor='#2874f0' TextColor='white' ImageSrc={FlipkartSecImg} imageWidth="40px" />
+      <Navbar Bgcolor='#a8d5e2' TextColor='black' ImageSrc={FlipkartSecImg} imageWidth="40px" />
       {/* <SellerNavbar /> */}
 
       {/* HERO SECTION */}
