@@ -114,7 +114,7 @@ const handleGoogleSignup = async () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              py: 4,
+              py: 5,
             }}
           >
             <Paper

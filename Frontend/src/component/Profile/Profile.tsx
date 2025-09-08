@@ -32,9 +32,9 @@ import {
   CameraAlt,
 } from "@mui/icons-material";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Navbar from "../Navbar/Navbar";
-import FlipkartSecImg from "../../assets/F4.png"
+import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 
 // ---- Flipkart Theme Colors ----
 const FK_BLUE = "#2874f0";
@@ -183,7 +183,7 @@ export default function Profile() {
   return (
     <Box sx={{ bgcolor: BG, minHeight: "100vh", pb: 6 }}>
       {/* Header strip */}
-     <Navbar Bgcolor='#2874f0' TextColor='white' ImageSrc={FlipkartSecImg} imageWidth="40px" />
+     <Navbar Bgcolor='#a8d5e2' TextColor='#0a2647'  ImageSrc={FlipkartSecImg} imageWidth="40px" />
 
       
         <Grid container justifyContent={'space-evenly'} pt={'90px'}>

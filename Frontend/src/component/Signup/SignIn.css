@@ -9,12 +9,13 @@
 
 }
 .BgImg {
-    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSReb-YOMsyR-VJO540AHj6SbUuOgN2lhg2bg&s");
+    background-image: url("../../assets/chatgptlogoone.png");
     background-repeat: no-repeat;
     background-position: center calc(100% - 20px);
     
     background-size: 140px;
     padding-block: 20px;
-    background-color: #2874f0;
+    background-color: #a8d5e2;
+    color: black !important;
       
 }

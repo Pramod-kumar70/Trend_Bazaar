@@ -111,16 +111,16 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
             <SearchIconWrapper onClick={handleSearch}>
-              <SearchIcon style={{ color: "#2874f0" }} />
+              <SearchIcon style={{ color: "#0a2647" }} />
             </SearchIconWrapper>
           </Search>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto"  }}>
             <Typography
-              sx={{ cursor: "pointer", fontWeight: 500 }}
+              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": {textDecoration:"underline" } }}
               onClick={() => window.open("/BecomeaSeller", "_blank")}
             >
-              <AiOutlineShop style={{ marginRight: "5px" }} /> Become a Seller
+              <AiOutlineShop style={{ fontSize:20, marginTop:-3 }} /> Become a Seller
             </Typography>
 
             {/* More Dropdown */}
@@ -133,7 +133,7 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
                   fontWeight: 500,
                   display: "flex",
                   alignItems: "center",
-                  "&:hover": { color: "#2874f0" }, // Flipkart hover effect
+                  "&:hover": {textDecoration:"underline" }, // Flipkart hover effect
                 }}
                 onClick={(e) =>
                   setMoreAnchor(moreAnchor ? null : e.currentTarget) // toggle on click
@@ -170,20 +170,20 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
             </Box>
 
             <Typography
-              sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
+              sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" , "&:hover": {textDecoration:"underline" } }}
               onClick={() => {
                 if (token) navigate("/cart/Details/MyCart");
                 else setOpenLogin(true);
               }}
             >
-              <GrCart style={{ marginRight: "5px" }} /> Cart
+              <GrCart style={{ marginRight: "2px", fontSize:18 }} /> Cart
             </Typography>
 
             {/* User Section */}
             {user ? (
               <>
                 <IconButton onClick={(e) => setProfileMenuAnchor(e.currentTarget)}>
-                  <Avatar alt={user.name} src={user.profileImage || ""} />
+                  <Avatar alt={user.name} src={user.profileImage || ""}  />
                 </IconButton>
                 <Menu
                   anchorEl={profileMenuAnchor}
