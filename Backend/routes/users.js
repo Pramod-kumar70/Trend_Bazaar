@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/users_table");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-
+// new commit
 const JWT_Secret = "wertyu34567890poiuytrewq"; // Ek hi key use hogi sab jagah
 
 // Register
