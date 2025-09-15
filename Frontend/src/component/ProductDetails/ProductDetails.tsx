@@ -17,7 +17,7 @@ import axios from "axios";
 import DefaultTvImg from "../../assets/DTV.png";
 import { MdStar } from "react-icons/md";
 import FlipkartSecImg from "../../assets/chatgptlogoone.png";
-
+// product
 interface Product {
   _id: string;
   title?: string;
