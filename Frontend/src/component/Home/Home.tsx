@@ -80,7 +80,6 @@ function Home() {
     border: "2px solid transparent",
     backgroundColor: "white",
     transition: "all 0.3s ease",
-
     "&:hover": {
       transform: "translateY(-3px)",
       boxShadow: "0px 2px 6px rgba(75, 78, 78, 0.4)",
@@ -148,8 +147,9 @@ function Home() {
             <Grid
               item
               xs={6}
-              sm={4}
+              sm={3}
               md={2}
+              lg={1.5}
               key={item._id}
               textAlign={"center"}
               sx={gridItemStyle}

@@ -25,6 +25,43 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
+
+interface Product {
+   title: string;
+  price: string | number;
+  ActualPrice: string | number;
+  Offer: string | number;
+  rating: string | number;
+  stock: string | number;
+
+  category: string;
+  section: string;
+  display: {
+    resolution: string;
+    screensize: string;
+  };
+  smartfeatures: {
+    os: string;
+  };
+  appsSupport: string;
+  specification: {
+    color: string;
+    lunchYear: string;
+  };
+  offerAvailable: { name: string }[];
+  brand: string;
+
+  warranty: string;
+  highlights: string;
+  tags: string;
+  thumbnail: string;
+  [key: string]: any; // 👈 yeh add karna zaroori hai kyunki tum dynamic keys use kar rahe ho
+}
+
+
+
+
+
 const categories = [
   "Electronics",
   "Fashion",
@@ -37,50 +74,51 @@ const categories = [
 export default function AddNewProduct() {
   const api = import.meta.env.VITE_API_BASE_URL;
 
-  const [product, setProduct] = useState({
-    title: "",
-    price: "",
-    ActualPrice: "",
-    Offer: "",
-    rating: "",
-    category: "",
-    section: "",
-    display: { resolution: "", screensize: "" },
-    smartfeatures: { os: "" },
-    appsSupport: "",
-    specification: { color: "", lunchYear: "" },
-    offerAvailable: [{ name: "" }],
-    brand: "",
-    stock: "",
-    warranty: "",
-    highlights: "",
-    tags: "",
-    thumbnail: "", // only image URL
-  });
+  const [product, setProduct] = useState<Product>({
+  title: "",
+  price: "",
+  ActualPrice: "",
+  Offer: "",
+  rating: "",
+  category: "",
+  section: "",
+  display: { resolution: "", screensize: "" },
+  smartfeatures: { os: "" },
+  appsSupport: "",
+  specification: { color: "", lunchYear: "" },
+  offerAvailable: [{ name: "" }],
+  brand: "",
+  stock: "",
+  warranty: "",
+  highlights: "",
+  tags: "",
+  thumbnail: "",
+});
 
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    if (name.includes(".")) {
-      const [parent, child] = name.split(".");
-      setProduct((prev) => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value,
-        },
-      }));
-    } else {
-      setProduct((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
+ const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => {
+  const { name, value } = e.target;
+  if (name.includes(".")) {
+    const [parent, child] = name.split(".");
+    setProduct((prev) => ({
+      ...prev,
+      [parent]: {
+        ...prev[parent],
+        [child]: value,
+      },
+    }));
+  } else {
+    setProduct((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+};
+
 
 
 
@@ -194,8 +232,8 @@ export default function AddNewProduct() {
                   name="title"
                   fullWidth
                   required
-                  value={product.title}
-                  onChange={handleChange}
+                  value={product.title || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -205,8 +243,8 @@ export default function AddNewProduct() {
                   type="number"
                   fullWidth
                   required
-                  value={product.price}
-                  onChange={handleChange}
+                  value={product.price || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -215,8 +253,8 @@ export default function AddNewProduct() {
                   name="ActualPrice"
                   type="number"
                   fullWidth
-                  value={product.ActualPrice}
-                  onChange={handleChange}
+                  value={product.ActualPrice || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -225,8 +263,8 @@ export default function AddNewProduct() {
                   name="Offer"
                   type="number"
                   fullWidth
-                  value={product.Offer}
-                  onChange={handleChange}
+                  value={product.Offer || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -235,8 +273,8 @@ export default function AddNewProduct() {
                   name="rating"
                   type="number"
                   fullWidth
-                  value={product.rating}
-                  onChange={handleChange}
+                  value={product.rating || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -246,8 +284,8 @@ export default function AddNewProduct() {
                   name="category"
                   fullWidth
                   required
-                  value={product.category}
-                  onChange={handleChange}
+                  value={product.category || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 >
                   {categories.map((cat) => (
                     <MenuItem key={cat} value={cat}>
@@ -262,8 +300,8 @@ export default function AddNewProduct() {
                   name="section"
                   placeholder="e.g. Best of Electronics"
                   fullWidth
-                  value={product.section}
-                  onChange={handleChange}
+                  value={product.section || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
 
@@ -278,8 +316,8 @@ export default function AddNewProduct() {
                   label="Brand Name"
                   name="brand"
                   fullWidth
-                  value={product.brand}
-                  onChange={handleChange}
+                  value={product.brand || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -288,8 +326,8 @@ export default function AddNewProduct() {
                   name="stock"
                   type="number"
                   fullWidth
-                  value={product.stock}
-                  onChange={handleChange}
+                  value={product.stock || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -297,8 +335,8 @@ export default function AddNewProduct() {
                   label="Warranty"
                   name="warranty"
                   fullWidth
-                  value={product.warranty}
-                  onChange={handleChange}
+                  value={product.warranty || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
 
@@ -313,8 +351,8 @@ export default function AddNewProduct() {
                   label="Image URL"
                   name="thumbnail"
                   fullWidth
-                  value={product.thumbnail}
-                  onChange={handleChange}
+                  value={product.thumbnail || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                   placeholder="https://example.com/image.jpg"
                 />
               </Grid>
@@ -330,8 +368,8 @@ export default function AddNewProduct() {
                   label="Resolution"
                   name="display.resolution"
                   fullWidth
-                  value={product.display.resolution}
-                  onChange={handleChange}
+                  value={product.display.resolution || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -339,8 +377,8 @@ export default function AddNewProduct() {
                   label="Screen Size (inches)"
                   name="display.screensize"
                   fullWidth
-                  value={product.display.screensize}
-                  onChange={handleChange}
+                  value={product.display.screensize || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -348,8 +386,8 @@ export default function AddNewProduct() {
                   label="Operating System"
                   name="smartfeatures.os"
                   fullWidth
-                  value={product.smartfeatures.os}
-                  onChange={handleChange}
+                  value={product.smartfeatures.os || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -357,8 +395,8 @@ export default function AddNewProduct() {
                   label="Apps Support (comma separated)"
                   name="appsSupport"
                   fullWidth
-                  value={product.appsSupport}
-                  onChange={handleChange}
+                  value={product.appsSupport || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
 
@@ -373,8 +411,8 @@ export default function AddNewProduct() {
                   label="Color"
                   name="specification.color"
                   fullWidth
-                  value={product.specification.color}
-                  onChange={handleChange}
+                  value={product.specification.color || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -382,8 +420,8 @@ export default function AddNewProduct() {
                   label="Launch Year"
                   name="specification.lunchYear"
                   fullWidth
-                  value={product.specification.lunchYear}
-                  onChange={handleChange}
+                  value={product.specification.lunchYear || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
 
@@ -393,8 +431,8 @@ export default function AddNewProduct() {
                   label="Highlights (comma separated)"
                   name="highlights"
                   fullWidth
-                  value={product.highlights}
-                  onChange={handleChange}
+                  value={product.highlights || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
 
@@ -415,7 +453,7 @@ export default function AddNewProduct() {
                   <TextField
                     fullWidth
                     label={`Offer #${idx + 1}`}
-                    value={offer.name}
+                    value={offer.name || ""}
                     onChange={(e) => handleOfferChange(idx, e.target.value)}
                   />
                   {product.offerAvailable.length > 1 && (
@@ -442,8 +480,8 @@ export default function AddNewProduct() {
                   label="Product Tags (comma separated)"
                   name="tags"
                   fullWidth
-                  value={product.tags}
-                  onChange={handleChange}
+                  value={product.tags || ""}
+                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
                 />
               </Grid>
 

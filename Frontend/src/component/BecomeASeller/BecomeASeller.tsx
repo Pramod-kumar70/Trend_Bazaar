@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function BecomeASeller() {
     const api = import.meta.env.VITE_API_BASE_URL;
-  const formRef = useRef(null);
+  const formRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate()
   const [tab, setTab] = useState(0);
 
@@ -70,11 +70,11 @@ export default function BecomeASeller() {
 
   const scrollToForm = () => {
     if (formRef.current) {
-      formRef.current.scrollIntoView({ behavior: "smooth" });
+      formRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (tab === 0) {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     } else {
@@ -82,7 +82,7 @@ export default function BecomeASeller() {
     }
   };
 
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
       !formData.fullname ||
@@ -120,7 +120,7 @@ export default function BecomeASeller() {
     }
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!loginData.email || !loginData.password) {
       toast.error("⚠ Please fill all fields!");
