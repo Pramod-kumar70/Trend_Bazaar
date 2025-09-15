@@ -74,6 +74,7 @@ type CartItem = {
 export default function CheckoutPage() {
   const token = localStorage.getItem("token");
   const [step, setStep] = useState(0);
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   // Cart
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -101,7 +102,7 @@ export default function CheckoutPage() {
   const fetchCart = async () => {
     try {
       setLoadingCart(true);
-      const res = await axios.get("http://localhost:3001/cart", { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${api}/cart`, { headers: { Authorization: `Bearer ${token}` } });
       setCartItems(res.data.items || []);
     } catch (err) {
       console.error(err);

@@ -45,6 +45,7 @@ const BG = "#f1f3f6";
 
 export default function Profile() {
   const token = localStorage.getItem("token");
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -65,7 +66,7 @@ export default function Profile() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get("http://localhost:3001/users/profile", {
+        const res = await axios.get(`${api}/users/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);
@@ -122,7 +123,7 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await axios.put("http://localhost:3001/users/profile", form, {
+      const res = await axios.put(`${api}/users/profile`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data);
@@ -145,7 +146,7 @@ export default function Profile() {
     }
     setPwdSaving(true);
     try {
-      await axios.put("http://localhost:3001/users/change-password", passwordData, {
+      await axios.put(`${api}/users/change-password`, passwordData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Password updated");

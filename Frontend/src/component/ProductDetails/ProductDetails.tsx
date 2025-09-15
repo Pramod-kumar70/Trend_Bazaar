@@ -24,6 +24,7 @@ function ProductDetails() {
   const navigate = useNavigate();
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   // ✅ Filter states
   const [priceRange, setPriceRange] = useState([0, 100000]);
@@ -34,12 +35,12 @@ function ProductDetails() {
   // ✅ Get category products based on clicked product id
   async function fetchCategoryProducts() {
     try {
-      const productRes = await axios.get(`http://localhost:3001/product/${id}`);
+      const productRes = await axios.get(`${api}/product/${id}`);
       const product = productRes.data.ParticularProduct;
 
       if (product?.category) {
         const res = await axios.get(
-          `http://localhost:3001/product/category/${product.category}`
+          `${api}/product/category/${product.category}`
         );
         setCategoryProducts(res.data.products || []);
       }

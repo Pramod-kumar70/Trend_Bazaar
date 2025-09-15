@@ -27,6 +27,7 @@ function SearchControl() {
   const { name } = useParams();
   const [fetchedProduct, setFetchedProduct] = useState([]);
   const [loading, setLoading] = useState(true);
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   // 🔹 Filter States
   const [priceRange, setPriceRange] = useState([0, 100000]);
@@ -39,9 +40,9 @@ function SearchControl() {
     try {
       let url = "";
       if (["toptrendy", "sports", "moredata"].includes(name.toLowerCase())) {
-        url = `http://localhost:3001/product/viewall/${name}`;
+        url = `${api}/product/viewall/${name}`;
       } else {
-        url = `http://localhost:3001/product/find/${name}`;
+        url = `${api}/product/find/${name}`;
       }
 
       const res = await fetch(url);

@@ -23,6 +23,8 @@ import { auth, googleProvider } from "../../Firebase";
 import { signInWithPopup } from "firebase/auth";
 import GoogleLogo from "../../assets/Google.png"
 export default function Signup({ open = "", handleClose="", onLoginClick="" }) {
+    const api = import.meta.env.VITE_API_BASE_URL;
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -42,7 +44,7 @@ export default function Signup({ open = "", handleClose="", onLoginClick="" }) {
     }
     try {
       setLoading(true);
-      await axios.post("http://localhost:3001/users/register", form);
+      await axios.post(`${api}/users/register`, form);
       toast.success("Account Created Successfully");
       handleClose();
     } catch (err) {
@@ -60,7 +62,7 @@ const handleGoogleSignup = async () => {
     const user = result.user;
 
     // yaha backend pe bhejo
-    await axios.post("http://localhost:3001/users/google-register", {
+    await axios.post(`${api}/users/google-register`, {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,  // optional

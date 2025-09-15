@@ -23,6 +23,7 @@ import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 import { useNavigate } from "react-router-dom";
 
 export default function BecomeASeller() {
+    const api = import.meta.env.VITE_API_BASE_URL;
   const formRef = useRef(null);
   const navigate = useNavigate()
   const [tab, setTab] = useState(0);
@@ -95,7 +96,7 @@ export default function BecomeASeller() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:3001/seller/register", {
+      const res = await fetch(`${api}/seller/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -126,7 +127,7 @@ export default function BecomeASeller() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:3001/seller/login", {
+      const res = await fetch(`${api}/seller/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),

@@ -18,10 +18,13 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../Firebase"; // ✅ only these imports
 import "./LogIn.css";
 import GoogleLogo from "../../assets/Google.png"
+
 export default function Login({ open, handleClose, onSignupClick, onLoginSuccess }) {
   const [User, setUser] = useState({ Email: "", Pass: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const api = import.meta.env.VITE_API_BASE_URL;
+
 
   // ✅ Normal Email/Password Login
   async function HandleSubmit(e) {
@@ -36,7 +39,7 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
     setErrors({});
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/users/login", {
+      const response = await fetch(`${api}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: User.Email, password: User.Pass }),
@@ -68,7 +71,7 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
     const user = result.user;
 
     // Backend ko bhejo
-    const response = await fetch("http://localhost:3001/users/google-login", {
+    const response = await fetch(`${api}/users/google-login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

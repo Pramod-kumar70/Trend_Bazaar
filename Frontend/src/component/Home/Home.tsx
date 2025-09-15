@@ -14,10 +14,11 @@ function Home() {
   const [ProductList, setProductList] = useState({});
   const [Loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   async function getAllData() {
     try {
-      const response = await fetch("http://localhost:3001/product");
+      const response = await fetch(`${api}/product`);
       const data = await response.json();
       setProductList(data);
     } catch (err) {
@@ -238,7 +239,7 @@ function Home() {
       <Box sx={{ borderTop: "1px solid #444", mt: 3, pt: 2, textAlign: "center", pb: 2 }}>
         <Typography variant="body2">© 2007-2025  | All Rights Reserved</Typography>
         <Typography variant="caption" sx={{ color: "#bbb" }}>
-         All trademarks and logos are property of their respective owners.
+          All trademarks and logos are property of their respective owners.
         </Typography>
       </Box>
     </Box>

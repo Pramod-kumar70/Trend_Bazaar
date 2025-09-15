@@ -35,6 +35,8 @@ const categories = [
 ];
 
 export default function AddNewProduct() {
+    const api = import.meta.env.VITE_API_BASE_URL;
+
   const [product, setProduct] = useState({
     title: "",
     price: "",
@@ -130,7 +132,7 @@ export default function AddNewProduct() {
     console.log("Payload to send:", payload);
 
     try {
-      await axios.post("http://localhost:3001/seller/SellerAddProduct", payload);
+      await axios.post(`${api}/seller/SellerAddProduct`, payload);
 
       toast.success("✅ Product added successfully!");
       navigate(`/BecomeaSeller/SellerDashboard/${sellerObj.id}`);

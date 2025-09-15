@@ -485,6 +485,7 @@ function MyCart() {
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const token = localStorage.getItem("token");
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   // Pricing (Flipkart-style demo values)
   const deliveryCharge = 50;
@@ -493,7 +494,7 @@ function MyCart() {
   const fetchCart = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3001/cart", {
+      const res = await axios.get(`${api}/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data.user || null);
@@ -729,7 +730,7 @@ function MyCart() {
   // Remove
   async function handleRemove(cartItemId: string) {
     try {
-      await axios.delete(`http://localhost:3001/cart/remove/${cartItemId}`, {
+      await axios.delete(`${api}/cart/remove/${cartItemId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCart();
@@ -743,7 +744,7 @@ function MyCart() {
     if (newQty < 1) return;
     try {
       await axios.put(
-        `http://localhost:3001/cart/update/${cartItemId}`,
+        `${api}/cart/update/${cartItemId}`,
         { quantity: newQty },
         { headers: { Authorization: `Bearer ${token}` } }
       );

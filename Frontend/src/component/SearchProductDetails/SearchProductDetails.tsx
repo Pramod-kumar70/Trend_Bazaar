@@ -24,6 +24,7 @@ import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 function SearchProductDetails() {
   const { id, name } = useParams();
   const navigate = useNavigate();
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -38,7 +39,7 @@ function SearchProductDetails() {
   const fetchProductDetails = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3001/product/find/${name}/${id}`
+        `${api}/product/find/${name}/${id}`
       );
       setProduct(res.data.Data);
     } catch (err) {
@@ -54,7 +55,7 @@ function SearchProductDetails() {
   const fetchRelatedProducts = async (category) => {
     try {
       const res = await axios.get(
-        `http://localhost:3001/product/category/${category}`
+        `${api}/product/category/${category}`
       );
       setRelatedProducts(res.data.products || []);
     } catch (err) {
@@ -97,7 +98,7 @@ function SearchProductDetails() {
     try {
       setBuying(true); // <-- yaha loading start
       const res = await axios.post(
-        "http://localhost:3001/cart/add",
+        `${api}/cart/add`,
         { productId: product._id, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
