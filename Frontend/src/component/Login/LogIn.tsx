@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,21 +15,27 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 import { Link as MuiLink } from "@mui/material";
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../../Firebase"; // ✅ only these imports
+import { auth, googleProvider } from "../../Firebase";
 import "./LogIn.css";
-import GoogleLogo from "../../assets/Google.png"
+import GoogleLogo from "../../assets/Google.png";
 
-export default function Login({ open, handleClose, onSignupClick, onLoginSuccess }) {
+type LoginProps = {
+  open: boolean;
+  handleClose: () => void;
+  onSignupClick: () => void;
+  onLoginSuccess?: () => void;
+};
+
+export default function Login({ open, handleClose, onSignupClick, onLoginSuccess }: LoginProps) {
   const [User, setUser] = useState({ Email: "", Pass: "" });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const api = import.meta.env.VITE_API_BASE_URL;
 
-
   // ✅ Normal Email/Password Login
-  async function HandleSubmit(e) {
+  async function HandleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const newErrors: any = {};
+    const newErrors: Record<string, string> = {};
     if (!User.Email.trim()) newErrors.Email = "Email is required";
     if (!User.Pass.trim()) newErrors.Pass = "Password is required";
     if (Object.keys(newErrors).length > 0) {
@@ -66,37 +72,35 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
 
   // ✅ Google Login
   const handleGoogleLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
 
-    // Backend ko bhejo
-    const response = await fetch(`${api}/users/google-login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL
-      }),
-    });
+      const response = await fetch(`${api}/users/google-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        }),
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      toast.success("Google Login Successful 🎉");
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      handleClose();
-      if (typeof onLoginSuccess === "function") onLoginSuccess();
-    } else {
-      toast.error(data.message || "Google login failed ❌");
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Google Login Successful 🎉");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        handleClose();
+        if (typeof onLoginSuccess === "function") onLoginSuccess();
+      } else {
+        toast.error(data.message || "Google login failed ❌");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Google login error ❌");
     }
-  } catch (err) {
-    console.error(err);
-    toast.error("Google login error ❌");
-  }
-};
-
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -210,7 +214,7 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
                     borderRadius: 1,
                   }}
                 >
-                 <Box component='img' src={GoogleLogo} width={"20px"} mx={2} /> Continue with Google
+                  <Box component="img" src={GoogleLogo} width={"20px"} mx={2} /> Continue with Google
                 </Button>
 
                 <Typography textAlign="center" variant="body2" sx={{ mt: 2 }}>

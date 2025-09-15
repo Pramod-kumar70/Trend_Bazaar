@@ -6,12 +6,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Home.css";
-import rupee from "../../assets/image copy 2.png"
-import UPI from "../../assets/image copy 3.png"
+import rupee from "../../assets/image copy 2.png";
+import UPI from "../../assets/image copy 3.png";
 
+// 🔹 Product type define
+type Product = {
+  _id: string;
+  title: string;
+  thumbnail: string;
+  Offer?: number;
+};
+
+// 🔹 API se aane wale ProductList ka type
+type ProductListType = {
+  [key: string]: Product[];
+};
 
 function Home() {
-  const [ProductList, setProductList] = useState({});
+  const [ProductList, setProductList] = useState<ProductListType>({});
   const [Loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const api = import.meta.env.VITE_API_BASE_URL;
@@ -40,8 +52,6 @@ function Home() {
       </Box>
     );
   }
-
-
 
   // Container style (Flipkart white section)
   const containerStyle = {
@@ -94,7 +104,10 @@ function Home() {
   };
 
   // Section header with View All
-  const SectionHeader = ({ title, onViewAll }) => (
+  const SectionHeader: React.FC<{ title: string; onViewAll: () => void }> = ({
+    title,
+    onViewAll,
+  }) => (
     <Box
       sx={{
         display: "flex",
@@ -113,33 +126,46 @@ function Home() {
     </Box>
   );
 
-  const handleCardClick = (id) => {
+  const handleCardClick = (id: string) => {
     navigate(`/${id}`);
   };
 
   // 🔹 Reusable Section
-  const renderSection = (title, dataKey, route, fallbackOffer = 5) => {
+  const renderSection = (
+    title: string,
+    dataKey: string,
+    route: string,
+    fallbackOffer = 5
+  ) => {
     const items = ProductList?.[dataKey] || [];
     if (!items.length) return null;
 
     return (
       <Box sx={containerStyle}>
         <SectionHeader title={title} onViewAll={() => navigate(`/search/${route}`)} />
-        <Grid container justifyContent={"space-evenly"}>
-          {items.map((item) => (
+        <Grid container spacing={2} justifyContent={"space-evenly"}>
+          {items.map((item: Product) => (
             <Grid
-              size={1.5}
+              item
+              xs={6}
+              sm={4}
+              md={2}
               key={item._id}
               textAlign={"center"}
               sx={gridItemStyle}
               onClick={() => handleCardClick(item._id)}
             >
-              <Box component="img" src={item.thumbnail} alt={item.title} sx={imageStyle} />
+              <Box
+                component="img"
+                src={item.thumbnail}
+                alt={item.title}
+                sx={imageStyle}
+              />
               <Typography fontSize={14} noWrap>
                 {item.title}
               </Typography>
               <Typography fontSize={17} fontWeight={600}>
-                Upto {item.Offer || fallbackOffer}% off
+                Upto {item.Offer ?? fallbackOffer}% off
               </Typography>
             </Grid>
           ))}
@@ -153,7 +179,9 @@ function Home() {
     <Box sx={{ bgcolor: "#172337", color: "#fff", mt: 5, px: 0, pt: 4, pb: 0 }}>
       <Grid container spacing={0} sx={{ maxWidth: "1200px", margin: "auto" }}>
         <Grid item xs={12} sm={2.5} sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>ABOUT</Typography>
+          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>
+            ABOUT
+          </Typography>
           <Typography variant="body2">Contact Us</Typography>
           <Typography variant="body2">About Us</Typography>
           <Typography variant="body2">Careers</Typography>
@@ -163,7 +191,9 @@ function Home() {
           <Typography variant="body2">Corporate Information</Typography>
         </Grid>
         <Grid item xs={12} sm={2.5} sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>HELP</Typography>
+          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>
+            HELP
+          </Typography>
           <Typography variant="body2">Payments</Typography>
           <Typography variant="body2">Shipping</Typography>
           <Typography variant="body2">Cancellation & Returns</Typography>
@@ -171,7 +201,9 @@ function Home() {
           <Typography variant="body2">Report Infringement</Typography>
         </Grid>
         <Grid item xs={12} sm={2.5} sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>CONSUMER POLICY</Typography>
+          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>
+            CONSUMER POLICY
+          </Typography>
           <Typography variant="body2">Return Policy</Typography>
           <Typography variant="body2">Terms Of Use</Typography>
           <Typography variant="body2">Security</Typography>
@@ -181,7 +213,9 @@ function Home() {
           <Typography variant="body2">EPR Compliance</Typography>
         </Grid>
         <Grid item xs={12} sm={2.5} sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>Mail Us:</Typography>
+          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>
+            Mail Us:
+          </Typography>
           <Typography variant="body2">Flipkart Internet Private Limited,</Typography>
           <Typography variant="body2">Buildings Alyssa, Begonia &</Typography>
           <Typography variant="body2">Clove Embassy Tech Village,</Typography>
@@ -190,7 +224,9 @@ function Home() {
           <Typography variant="body2">Karnataka, India</Typography>
         </Grid>
         <Grid item xs={12} sm={2.5} sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>Registered Office Address:</Typography>
+          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>
+            Registered Office Address:
+          </Typography>
           <Typography variant="body2">Flipkart Internet Private Limited,</Typography>
           <Typography variant="body2">Buildings Alyssa, Begonia &</Typography>
           <Typography variant="body2">Clove Embassy Tech Village,</Typography>
@@ -201,43 +237,128 @@ function Home() {
           <Typography variant="body2">Telephone: 044-45614700</Typography>
         </Grid>
         <Grid item xs={12} sm={2} sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>Social</Typography>
+          <Typography variant="subtitle2" sx={{ color: "#878787", mb: 1 }}>
+            Social
+          </Typography>
           <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-            <Link color="inherit" display="block"><img src="https://play-lh.googleusercontent.com/KCMTYuiTrKom4Vyf0G4foetVOwhKWzNbHWumV73IXexAIy5TTgZipL52WTt8ICL-oIo" width={"30px"} alt="Facebook" style={{ borderRadius: 5 }} /></Link>
-            <Link color="inherit" display="block"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" width={"30px"} alt="YouTube" /></Link>
-            <Link color="inherit" display="block"><img src="https://store-images.s-microsoft.com/image/apps.26737.9007199266244427.c75d2ced-a383-40dc-babd-1ad2ceb13c86.ed1d047e-03d9-4cd8-a342-c4ade1e58951" width={"30px"} alt="Twitter" style={{ borderRadius: 5 }} /></Link>
-            <Link color="inherit" display="block"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width={"30px"} alt="Instagram" style={{ borderRadius: 5 }} /></Link>
+            <Link color="inherit" to="#">
+              <img
+                src="https://play-lh.googleusercontent.com/KCMTYuiTrKom4Vyf0G4foetVOwhKWzNbHWumV73IXexAIy5TTgZipL52WTt8ICL-oIo"
+                width={"30px"}
+                alt="Facebook"
+                style={{ borderRadius: 5 }}
+              />
+            </Link>
+            <Link color="inherit" to="#">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png"
+                width={"30px"}
+                alt="YouTube"
+              />
+            </Link>
+            <Link color="inherit" to="#">
+              <img
+                src="https://store-images.s-microsoft.com/image/apps.26737.9007199266244427.c75d2ced-a383-40dc-babd-1ad2ceb13c86.ed1d047e-03d9-4cd8-a342-c4ade1e58951"
+                width={"30px"}
+                alt="Twitter"
+                style={{ borderRadius: 5 }}
+              />
+            </Link>
+            <Link color="inherit" to="#">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                width={"30px"}
+                alt="Instagram"
+                style={{ borderRadius: 5 }}
+              />
+            </Link>
           </Box>
         </Grid>
       </Grid>
 
       {/* Payment & Delivery Partners */}
-      <Box sx={{ borderTop: "1px solid #444", mt: 4, pt: 3, display: "flex", flexDirection: "row", alignItems: "flex-start", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
+      <Box
+        sx={{
+          borderTop: "1px solid #444",
+          mt: 4,
+          pt: 3,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          gap: 8,
+          flexWrap: "wrap",
+        }}
+      >
         <Box>
-          <Typography variant="body2" sx={{ color: "#bbb", mb: 1 }}>Payment Partners</Typography>
+          <Typography variant="body2" sx={{ color: "#bbb", mb: 1 }}>
+            Payment Partners
+          </Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" style={{ height: "25px" }} />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="MasterCard" style={{ height: "25px" }} />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
+              alt="Visa"
+              style={{ height: "25px" }}
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
+              alt="MasterCard"
+              style={{ height: "25px" }}
+            />
             <img src={rupee} alt="RuPay" style={{ height: "25px" }} />
             <img src={UPI} alt="UPI" style={{ height: "25px" }} />
-            <img src="https://img-cdn.thepublive.com/filters:format(webp)/sambad-english/media/post_attachments/wp-content/uploads/2017/02/Paytm.png" alt="Paytm" style={{ height: "25px" }} />
-            <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/GooglePayLogo.width-500.format-webp.webp" alt="Google Pay" style={{ height: "25px" }} />
+            <img
+              src="https://img-cdn.thepublive.com/filters:format(webp)/sambad-english/media/post_attachments/wp-content/uploads/2017/02/Paytm.png"
+              alt="Paytm"
+              style={{ height: "25px" }}
+            />
+            <img
+              src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/GooglePayLogo.width-500.format-webp.webp"
+              alt="Google Pay"
+              style={{ height: "25px" }}
+            />
           </Box>
         </Box>
         <Box>
-          <Typography variant="body2" sx={{ color: "#bbb", mb: 1 }}>Delivery Partners</Typography>
+          <Typography variant="body2" sx={{ color: "#bbb", mb: 1 }}>
+            Delivery Partners
+          </Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
-            <img src="https://shipcorrect.com/images/brand%20image/ekart.webp" alt="Ekart" style={{ height: "25px" }} />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/DHL_Logo.svg/2560px-DHL_Logo.svg.png" alt="DHL" style={{ height: "25px" }} />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/FedEx_logo.jpg" alt="FedEx" style={{ height: "25px" }} />
-            <img src="https://i.pinimg.com/736x/01/9b/ae/019bae205f88ece53acc960ded948490.jpg" alt="Delhivery" style={{ height: "25px" }} />
+            <img
+              src="https://shipcorrect.com/images/brand%20image/ekart.webp"
+              alt="Ekart"
+              style={{ height: "25px" }}
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/DHL_Logo.svg/2560px-DHL_Logo.svg.png"
+              alt="DHL"
+              style={{ height: "25px" }}
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/71/FedEx_logo.jpg"
+              alt="FedEx"
+              style={{ height: "25px" }}
+            />
+            <img
+              src="https://i.pinimg.com/736x/01/9b/ae/019bae205f88ece53acc960ded948490.jpg"
+              alt="Delhivery"
+              style={{ height: "25px" }}
+            />
           </Box>
         </Box>
       </Box>
 
-      {/* Copyright & Legal */}
-      <Box sx={{ borderTop: "1px solid #444", mt: 3, pt: 2, textAlign: "center", pb: 2 }}>
-        <Typography variant="body2">© 2007-2025  | All Rights Reserved</Typography>
+      {/* Copyright */}
+      <Box
+        sx={{
+          borderTop: "1px solid #444",
+          mt: 3,
+          pt: 2,
+          textAlign: "center",
+          pb: 2,
+        }}
+      >
+        <Typography variant="body2">© 2007-2025 | All Rights Reserved</Typography>
         <Typography variant="caption" sx={{ color: "#bbb" }}>
           All trademarks and logos are property of their respective owners.
         </Typography>
@@ -245,13 +366,10 @@ function Home() {
     </Box>
   );
 
-
-
   return (
     <div style={{ background: "#f1f3f6", minHeight: "100vh" }}>
       <Navbar />
       <Slider />
-
 
       {/* 🔹 Sections */}
       {renderSection("Top Offers", "TopTrendy", "TopTrendy", 10)}
@@ -263,13 +381,10 @@ function Home() {
       {renderSection("Sports, HealthCare & Fitness", "sports", "Sports", 5)}
       {renderSection("Furniture Bestsellers", "Furniture", "Furniture", 12)}
 
-
-
       {/* 🔹 Recommended */}
       {renderSection("Bestsellers / Recommended for You", "Recommended", "Recommended", 9)}
 
-
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }

@@ -1,11 +1,11 @@
 // CheckoutPage.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import  { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import {
   Box,
   Grid,
   Card,
-  CardContent,
+  
   Typography,
   Divider,
   Button,
@@ -16,7 +16,7 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Avatar,
+  
   Dialog,
   DialogTitle,
   DialogContent,

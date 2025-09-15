@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AppBar,
   Box,
@@ -22,6 +22,14 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "../Login/Login";
 import Signup from "../Signup/Signup";
 import logoimg from "../../assets/chatgptcrp.png";
+
+// Props type
+interface NavbarProps {
+  Bgcolor?: string;
+  TextColor?: string;
+  ImageSrc?: string;
+  imageWidth?: string | number;
+}
 
 const Search = styled("div")(() => ({
   position: "relative",
@@ -57,20 +65,24 @@ const SearchIconWrapper = styled("div")(() => ({
   borderBottomRightRadius: "2px",
 }));
 
-export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", ImageSrc = logoimg, imageWidth = "130px" }) {
+export default function Navbar({
+  Bgcolor = "#ffdac6",
+  TextColor = "Black",
+  ImageSrc = logoimg,
+  imageWidth = "130px",
+}: NavbarProps) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState<any>(() => {
     const u = localStorage.getItem("user");
     return u ? JSON.parse(u) : null;
   });
 
   const [openLogin, setOpenLogin] = useState(false);
   const [openSignup, setOpenSignup] = useState(false);
-  const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
-  const [moreAnchor, setMoreAnchor] = useState(null);
-
+  const [profileMenuAnchor, setProfileMenuAnchor] = useState<null | HTMLElement>(null);
+  const [moreAnchor, setMoreAnchor] = useState<null | HTMLElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = () => {
@@ -115,16 +127,19 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
             </SearchIconWrapper>
           </Search>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto"  }}>
+          {/* Right Side */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto" }}>
             <Typography
-              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": {textDecoration:"underline" } }}
+              sx={{
+                cursor: "pointer",
+                fontWeight: 500,
+                "&:hover": { textDecoration: "underline" },
+              }}
               onClick={() => window.open("/BecomeaSeller", "_blank")}
             >
-              <AiOutlineShop style={{ fontSize:20, marginTop:-3 }} /> Become a Seller
+              <AiOutlineShop style={{ fontSize: 20, marginTop: -3 }} /> Become a Seller
             </Typography>
 
-            {/* More Dropdown */}
-            {/* More Dropdown */}
             {/* More Dropdown */}
             <Box>
               <Typography
@@ -133,11 +148,9 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
                   fontWeight: 500,
                   display: "flex",
                   alignItems: "center",
-                  "&:hover": {textDecoration:"underline" }, // Flipkart hover effect
+                  "&:hover": { textDecoration: "underline" },
                 }}
-                onClick={(e) =>
-                  setMoreAnchor(moreAnchor ? null : e.currentTarget) // toggle on click
-                }
+                onClick={(e) => setMoreAnchor(moreAnchor ? null : e.currentTarget)}
               >
                 More {moreAnchor ? "▲" : "▼"}
               </Typography>
@@ -146,7 +159,7 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
                 anchorEl={moreAnchor}
                 open={Boolean(moreAnchor)}
                 onClose={() => setMoreAnchor(null)}
-                disableScrollLock={true}
+                disableScrollLock
                 PaperProps={{
                   sx: {
                     mt: 1,
@@ -169,21 +182,28 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
               </Menu>
             </Box>
 
+            {/* Cart */}
             <Typography
-              sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" , "&:hover": {textDecoration:"underline" } }}
+              sx={{
+                cursor: "pointer",
+                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                "&:hover": { textDecoration: "underline" },
+              }}
               onClick={() => {
                 if (token) navigate("/cart/Details/MyCart");
                 else setOpenLogin(true);
               }}
             >
-              <GrCart style={{ marginRight: "2px", fontSize:18 }} /> Cart
+              <GrCart style={{ marginRight: "2px", fontSize: 18 }} /> Cart
             </Typography>
 
             {/* User Section */}
             {user ? (
               <>
                 <IconButton onClick={(e) => setProfileMenuAnchor(e.currentTarget)}>
-                  <Avatar alt={user.name} src={user.profileImage || ""}  />
+                  <Avatar alt={user.name} src={user.profileImage || ""} />
                 </IconButton>
                 <Menu
                   anchorEl={profileMenuAnchor}
@@ -202,14 +222,12 @@ export default function Navbar({ Bgcolor = "#ffdac6", TextColor = "Black", Image
                 </Menu>
               </>
             ) : (
-              <>
-                <Typography
-                  sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
-                  onClick={() => setOpenLogin(true)}
-                >
-                  <VscAccount style={{ marginRight: "5px" }} /> Login
-                </Typography>
-              </>
+              <Typography
+                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
+                onClick={() => setOpenLogin(true)}
+              >
+                <VscAccount style={{ marginRight: "5px" }} /> Login
+              </Typography>
             )}
           </Box>
         </Toolbar>

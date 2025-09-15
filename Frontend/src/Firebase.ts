@@ -1,4 +1,4 @@
-// firebase.js
+// firebase.d.ts
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 

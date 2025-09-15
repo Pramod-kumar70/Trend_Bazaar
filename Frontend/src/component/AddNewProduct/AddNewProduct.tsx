@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   TextField,
@@ -8,7 +8,7 @@ import {
   Paper,
   Divider,
   Grid,
-  Avatar,
+
   IconButton,
   Tooltip,
   Switch,
@@ -35,7 +35,7 @@ const categories = [
 ];
 
 export default function AddNewProduct() {
-    const api = import.meta.env.VITE_API_BASE_URL;
+  const api = import.meta.env.VITE_API_BASE_URL;
 
   const [product, setProduct] = useState({
     title: "",
@@ -61,7 +61,9 @@ export default function AddNewProduct() {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     if (name.includes(".")) {
       const [parent, child] = name.split(".");
@@ -80,7 +82,9 @@ export default function AddNewProduct() {
     }
   };
 
-  const handleOfferChange = (index, value) => {
+
+
+  const handleOfferChange = (index: number, value: string) => {
     const updatedOffers = [...product.offerAvailable];
     updatedOffers[index].name = value;
     setProduct((prev) => ({ ...prev, offerAvailable: updatedOffers }));
@@ -93,13 +97,13 @@ export default function AddNewProduct() {
     }));
   };
 
-  const removeOfferField = (index) => {
+  const removeOfferField = (index: number) => {
     const updatedOffers = [...product.offerAvailable];
     updatedOffers.splice(index, 1);
     setProduct((prev) => ({ ...prev, offerAvailable: updatedOffers }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Seller object stored in localStorage as stringified JSON, parse it first
@@ -154,7 +158,7 @@ export default function AddNewProduct() {
           control={
             <Switch
               checked={darkMode}
-              onChange={() => setDarkMode(!darkMode)}
+              onChange={(_, checked) => setDarkMode(checked)}
               color="default"
             />
           }
@@ -427,7 +431,7 @@ export default function AddNewProduct() {
                 </Grid>
               ))}
               <Grid item xs={12}>
-                <Button startIcon={<AddIcon />} onClick={addOfferField}>
+                <Button startIcon={<AddIcon />} onClick={() => addOfferField()}>
                   Add More Offers
                 </Button>
               </Grid>
