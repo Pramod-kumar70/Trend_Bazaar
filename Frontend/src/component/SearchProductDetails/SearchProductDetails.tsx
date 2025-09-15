@@ -21,13 +21,44 @@ import { toast } from "sonner";
 import DefaultTvImg from "../../assets/DTV.png";
 import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 
+
+// types.ts ya isi file mein top par
+export interface Product {
+  _id: string;
+  title?: string;
+  name?: string;
+  thumbnail?: string;
+  rating?: number;
+  price?: number;
+  ActualPrice?: number;
+  Offer?: number;
+  category?: string;
+  offerAvailable?: {
+    label?: string;
+    text?: string;
+    term?: string;
+  }[];
+  smartfeatures?: {
+    os?: string;
+    appsSupport?: string[];
+  };
+  display?: {
+    resolution?: string;
+  };
+  specification?: {
+    lunchYear?: string;
+  };
+}
+
+
+
 function SearchProductDetails() {
   const { id, name } = useParams();
   const navigate = useNavigate();
   const api = import.meta.env.VITE_API_BASE_URL;
 
-  const [product, setProduct] = useState(null);
-  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [relatedLoading, setRelatedLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,23 +69,23 @@ function SearchProductDetails() {
   // Fetch main product details
   const fetchProductDetails = async () => {
     try {
-      const res = await axios.get(
+      const res = await axios.get<{ Data: Product }>(
         `${api}/product/find/${name}/${id}`
       );
       setProduct(res.data.Data);
     } catch (err) {
       console.error("Error in SearchProductDetails page", err);
       setError("Something went wrong while fetching product details.");
-      toast.error("❌ Failed to load product details", { autoClose: 2000 });
+      toast.error("❌ Failed to load product details");
     } finally {
       setLoading(false);
     }
   };
 
   // Fetch related products
-  const fetchRelatedProducts = async (category) => {
+  const fetchRelatedProducts = async (category: string) => {
     try {
-      const res = await axios.get(
+      const res = await axios.get<{ products: Product[] }>(
         `${api}/product/category/${category}`
       );
       setRelatedProducts(res.data.products || []);
@@ -90,7 +121,7 @@ function SearchProductDetails() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      toast.warn("⚠️ Please login to continue", { autoClose: 2000 });
+      toast.warn("⚠️ Please login to continue");
       navigate("/login");
       return;
     }
@@ -104,7 +135,7 @@ function SearchProductDetails() {
       );
 
       if (res.data.success) {
-        toast.success("🛒 Item added to your cart!", { autoClose: 2000 });
+        toast.success("🛒 Item added to your cart!");
         setAlreadyInCart(true);
 
         setTimeout(() => {
@@ -113,7 +144,7 @@ function SearchProductDetails() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("❌ Failed to add item to cart", { autoClose: 2000 });
+      toast.error("❌ Failed to add item to cart");
     } finally {
       setBuying(false); // <-- loading khatam
     }
@@ -142,7 +173,7 @@ function SearchProductDetails() {
             <Grid size={3.5} className="HoverEffect"
               sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
-                toast.info("🛒 Feature coming soon!", { autoClose: 1500 })
+                toast.info("🛒 Feature coming soon!")
               }
             >
               <GrCart style={{ fontSize: "30px" }} />
@@ -151,9 +182,7 @@ function SearchProductDetails() {
             <Grid size={3.5} className="HoverEffect"
               sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
-                toast.info("💳 EMI option will be available soon", {
-                  autoClose: 1500
-                })
+                toast.info("💳 EMI option will be available soon")
               }
             >
               Pay with EMI
@@ -174,7 +203,7 @@ function SearchProductDetails() {
               onClick={() => {
                 if (!buying) {
                   if (alreadyInCart) {
-                    toast.warning("📦 Already in your cart", { autoClose: 1500 });
+                    toast.warning("📦 Already in your cart");
                     navigate(`/cart/${product._id}`);
                   } else {
                     handleBuyNow();
@@ -257,7 +286,7 @@ function SearchProductDetails() {
           <Typography fontWeight="bold" mt={2}>
             Available offers
           </Typography>
-          <ul type="none" className="UL">
+          <ul className="UL" style={{ listStyle: "none", padding: 0, margin: 0 }} >
             {Array.isArray(product.offerAvailable) &&
               product.offerAvailable.length > 0 ? (
               product.offerAvailable.map((offer, index) => (
@@ -308,7 +337,7 @@ function SearchProductDetails() {
               {relatedProducts
                 .filter((p) => p._id !== product._id)
                 .slice(0, 5)
-                .map((item) => (
+                .map((item:Product) => (
                   <Grid size={2.2} key={item._id}>
                     <Card
                       sx={{

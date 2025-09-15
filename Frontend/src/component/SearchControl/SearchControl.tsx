@@ -6,7 +6,7 @@ import {
   CardContent,
   CardMedia,
   IconButton,
-  Button,
+
   Slider,
   Checkbox,
   FormControlLabel,
@@ -22,18 +22,48 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import FlipkartSecImg from "../../assets/chatgptlogoone.png";
 
+interface Product {
+  _id: string;
+  category: string;
+  brand: string;
+  title: string;
+  rating: number;
+  price: number;
+  ActualPrice: number;
+  Offer?: number;
+  thumbnail: string;
+  display?: {
+    resolution?: string;
+    screensize?: string;
+  };
+  smartfeatures?: {
+    os?: string;
+  };
+  appsSupport?: string[];
+  specification?: {
+    color?: string;
+    lunchYear?: string;
+  };
+  delivery?: string;
+  offer?: string; // 🔹 Tumne ek jagah small 'offer' bhi use kiya hai
+}
+
+
+
 function SearchControl() {
   const navigate = useNavigate();
   const { name } = useParams();
-  const [fetchedProduct, setFetchedProduct] = useState([]);
+  const [fetchedProduct, setFetchedProduct] = useState<Product[]>([]);
+
   const [loading, setLoading] = useState(true);
   const api = import.meta.env.VITE_API_BASE_URL;
 
   // 🔹 Filter States
-  const [priceRange, setPriceRange] = useState([0, 100000]);
-  const [selectedRatings, setSelectedRatings] = useState([]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
+  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
   const [onlyDiscount, setOnlyDiscount] = useState(false);
 
   async function fetchProductByName() {
@@ -48,7 +78,7 @@ function SearchControl() {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
       const data = await res.json();
-      const products = data.SearchedProduct || data.products || [];
+      const products: Product[] = data.SearchedProduct || data.products || [];
       setFetchedProduct(products);
 
       if (products.length === 0) {
@@ -79,7 +109,8 @@ function SearchControl() {
   // 🔹 Filtering Logic
   const filteredProducts = fetchedProduct.filter((item) => {
     const price = item.price || 0;
-    const rating = parseFloat(item.rating) || 0;
+    const rating = item.rating || 0;
+
 
     const priceMatch = price >= priceRange[0] && price <= priceRange[1];
     const ratingMatch =
@@ -136,7 +167,7 @@ function SearchControl() {
             <Typography fontWeight="bold">Price</Typography>
             <Slider
               value={priceRange}
-              onChange={(e, newValue) => setPriceRange(newValue)}
+              onChange={(_e, newValue) => setPriceRange(newValue as [number, number])}
               valueLabelDisplay="auto"
               min={0}
               max={100000}
@@ -307,7 +338,9 @@ function SearchControl() {
                       }
                       alt={item.title}
                       sx={{ objectFit: "contain", p: 2 }}
-                      onError={(e) => (e.currentTarget.src = DefaultTvImg)}
+                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                        (e.currentTarget as HTMLImageElement).src = DefaultTvImg;
+                      }}
                     />
 
                     {/* Product Info */}
@@ -371,7 +404,7 @@ function SearchControl() {
                         <Typography fontSize={13} color="text.secondary">
                           OS: {item.smartfeatures?.os || "Android TV"}
                         </Typography>
-                        <Typography fontSize={13} color="text.secondary">
+                       <Typography fontSize={13} color="text.secondary">
                           Apps:{" "}
                           {item.appsSupport?.length > 0
                             ? item.appsSupport.slice(0, 2).join(", ") + "+"

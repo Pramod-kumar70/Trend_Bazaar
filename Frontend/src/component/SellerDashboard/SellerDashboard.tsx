@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import {Box,Avatar,Button,IconButton,TextField,Select,MenuItem, InputAdornment,
@@ -13,12 +13,43 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import './SellerDashboard.css'
 
+
+interface Product {
+  _id: string;
+  title: string;
+  category?: string;
+  section?: string;
+  thumbnail?: string;
+  price?: number;
+  Offer?: number;
+  createdAt?: string;
+  smartfeatures?: {
+    os?: string;
+  };
+  specification?: {
+    color?: string;
+    lunchYear?: string;
+  };
+}
+
+
+
+interface Seller {
+  fullname?: string;
+  businessName?: string;
+  email?: string;
+  phone?: string;
+}
+
+
 export default function SellerDashboard() {
+
+    const api = import.meta.env.VITE_API_BASE_URL;
   const { id } = useParams(); // dynamic seller id from params
   const navigate = useNavigate();
 
-  const [seller, setSeller] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [seller, setSeller] = useState<Seller | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [stats, setStats] = useState({
     totalOrders: 0,
     delivered: 0,
@@ -31,27 +62,33 @@ export default function SellerDashboard() {
   const [filterCategory, setFilterCategory] = useState("all");
   const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`http://localhost:3001/seller/dashboard/${id}`);
-        // Expected shape: { sellerDetails: {...}, products: [...], totalOrders?, delivered?, pending? }
-        setSeller(res.data.sellerDetails || {});
-        setProducts(res.data.products || []);
-        setStats({
-          totalOrders: res.data.totalOrders ?? 0,
-          delivered: res.data.delivered ?? 0,
-          pending: res.data.pending ?? 0,
-        });
-      } catch (err) {
-        console.error("Error loading dashboard:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [id]);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get<{
+        sellerDetails: Seller;
+        products: Product[];
+        totalOrders: number;
+        delivered: number;
+        pending: number;
+      }>(`${api}/seller/dashboard/${id}`);
+
+      setSeller(res.data.sellerDetails || {});
+      setProducts(res.data.products || []);
+      setStats({
+        totalOrders: res.data.totalOrders ?? 0,
+        delivered: res.data.delivered ?? 0,
+        pending: res.data.pending ?? 0,
+      });
+    } catch (err) {
+      console.error("Error loading dashboard:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, [id]);
 
   // Derived lists & categories
   const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));

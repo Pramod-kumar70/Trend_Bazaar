@@ -1,6 +1,4 @@
-// Signup.tsx file
-
-import  { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,9 +19,20 @@ import "./SignIn.css";
 // 👇 Firebase import
 import { auth, googleProvider } from "../../Firebase";
 import { signInWithPopup } from "firebase/auth";
-import GoogleLogo from "../../assets/Google.png"
-export default function Signup({ open = "", handleClose="", onLoginClick="" }) {
-    const api = import.meta.env.VITE_API_BASE_URL;
+import GoogleLogo from "../../assets/Google.png";
+
+interface SignupProps {
+  open: boolean;
+  handleClose: () => void;
+  onLoginClick: () => void;
+}
+
+export default function Signup({
+  open = false,
+  handleClose = () => {},
+  onLoginClick = () => {},
+}: SignupProps) {
+  const api = import.meta.env.VITE_API_BASE_URL as string;
 
   const [form, setForm] = useState({
     name: "",
@@ -33,7 +42,7 @@ export default function Signup({ open = "", handleClose="", onLoginClick="" }) {
   });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -47,7 +56,7 @@ export default function Signup({ open = "", handleClose="", onLoginClick="" }) {
       await axios.post(`${api}/users/register`, form);
       toast.success("Account Created Successfully");
       handleClose();
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.response?.data?.message || "Signup Failed");
     } finally {
       setLoading(false);
@@ -55,28 +64,25 @@ export default function Signup({ open = "", handleClose="", onLoginClick="" }) {
   };
 
   // 👇 Google Signup
-  // 👇 Google Signup
-const handleGoogleSignup = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
+  const handleGoogleSignup = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
 
-    // yaha backend pe bhejo
-    await axios.post(`${api}/users/google-register`, {
-      name: user.displayName,
-      email: user.email,
-      photo: user.photoURL,  // optional
-      googleId: user.uid     // unique id (safe rahega)
-    });
+      await axios.post(`${api}/users/google-register`, {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+        googleId: user.uid,
+      });
 
-    toast.success(`Welcome ${user.displayName}`);
-    handleClose();
-  } catch (error) {
-    console.error("Google signup error:", error);
-    toast.error("Google signup failed");
-  }
-};
-
+      toast.success(`Welcome ${user.displayName}`);
+      handleClose();
+    } catch (error) {
+      console.error("Google signup error:", error);
+      toast.error("Google signup failed");
+    }
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -90,8 +96,9 @@ const handleGoogleSignup = async () => {
         <Grid container sx={{ minHeight: "70vh" }}>
           {/* Left Section */}
           <Grid
+            item
+            xs={5}
             className="BgImg"
-            size={5}
             sx={{
               color: "white",
               display: "flex",
@@ -110,7 +117,8 @@ const handleGoogleSignup = async () => {
 
           {/* Right Section */}
           <Grid
-            size={7}
+            item
+            xs={7}
             sx={{
               backgroundColor: "#f1f3f6",
               display: "flex",
@@ -188,7 +196,7 @@ const handleGoogleSignup = async () => {
                 {loading ? "Creating..." : "Sign Up"}
               </Button>
 
-              {/* 👇 Extra Button Google Signup ke liye */}
+              {/* 👇 Google Signup Button */}
               <Button
                 fullWidth
                 variant="outlined"
@@ -201,7 +209,8 @@ const handleGoogleSignup = async () => {
                 }}
                 onClick={handleGoogleSignup}
               >
-              <Box component="img" src={GoogleLogo} width={"20px"} mx={2}  />  Sign up with Google
+                <Box component="img" src={GoogleLogo} width={"20px"} mx={2} />{" "}
+                Sign up with Google
               </Button>
 
               <Divider sx={{ my: 2 }} />
@@ -216,8 +225,8 @@ const handleGoogleSignup = async () => {
                     cursor: "pointer",
                   }}
                   onClick={() => {
-                    handleClose(); // Close signup popup
-                    onLoginClick(); // Open login popup
+                    handleClose();
+                    onLoginClick();
                   }}
                 >
                   Log in
@@ -225,8 +234,6 @@ const handleGoogleSignup = async () => {
               </Typography>
             </Paper>
           </Grid>
-
-
         </Grid>
       </DialogContent>
     </Dialog>
