@@ -592,7 +592,7 @@ function MyCart() {
 
       <Grid container spacing={3} px={{ xs: 2, md: 3 }} py={4}>
         {/* Cart Items */}
-        <Grid size={8}>
+        <Grid item lg={8}>
           {cartItems.length === 0 ? (
             <EmptyCart />
           ) : (

@@ -170,7 +170,7 @@ function SearchProductDetails() {
           />
 
           <Grid container display="flex" justifyContent="space-evenly">
-            <Grid size={3.5} className="HoverEffect"
+            <Grid item lg={3.5} className="HoverEffect"
               sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
                 toast.info("🛒 Feature coming soon!")
@@ -179,7 +179,7 @@ function SearchProductDetails() {
               <GrCart style={{ fontSize: "30px" }} />
             </Grid>
 
-            <Grid size={3.5} className="HoverEffect"
+            <Grid item lg={3.5} className="HoverEffect"
               sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
                 toast.info("💳 EMI option will be available soon")
@@ -189,7 +189,8 @@ function SearchProductDetails() {
             </Grid>
 
             <Grid
-              size={3.5}
+            item
+              lg={3.5}
               className="HoverEffect"
               sx={{
                 backgroundColor: "orangered",
@@ -227,7 +228,7 @@ function SearchProductDetails() {
         </Grid>
 
         {/* Product Details */}
-        <Grid size={7}>
+        <Grid item lg={7}>
           {/* Title with Show More */}
           <Box>
             <Typography
@@ -338,7 +339,7 @@ function SearchProductDetails() {
                 .filter((p) => p._id !== product._id)
                 .slice(0, 5)
                 .map((item:Product) => (
-                  <Grid size={2.2} key={item._id}>
+                  <Grid item lg={2.2} key={item._id}>
                     <Card
                       sx={{
                         cursor: "pointer",

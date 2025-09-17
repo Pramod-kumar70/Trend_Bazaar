@@ -3,14 +3,6 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import {Box,Avatar,Button,IconButton,TextField,Select,MenuItem, InputAdornment,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
-import ViewListIcon from "@mui/icons-material/ViewList";
-import ListAltIcon from "@mui/icons-material/ListAlt";
 import './SellerDashboard.css'
 
 

@@ -147,7 +147,7 @@ function SearchControl() {
 
       <Grid container mt="90px" spacing={2}>
         {/* 🔹 Filter Sidebar */}
-        <Grid size={2} >
+        <Grid item lg={2} >
           <Box
             sx={{
               bgcolor: "#fff",
@@ -268,11 +268,11 @@ function SearchControl() {
         </Grid>
 
         {/* 🔹 Products Grid */}
-        <Grid size={10}>
+        <Grid item lg={10} >
           <Grid container spacing={2}>
             {filteredProducts.length > 0 ? (
               filteredProducts.map((item) => (
-                <Grid size={3} key={item._id}>
+                <Grid item lg={3} key={item._id}>
                   <Card
                     sx={{
                       height: "100%",
