@@ -1,4 +1,4 @@
-
+// src/component/MyCart/MyCart.tsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../Navbar/Navbar";
@@ -23,18 +23,36 @@ import EmptyCart from "./EmptyCart";
 import OrderSummary from "./OrderSummary";
 import CheckoutStepper from "./CheckoutStepper";
 
+// ----------------------- Types -----------------------
+type Product = {
+  _id: string;
+  name: string;
+  price: number;
+  thumbnail: string;
+};
+
+type CartItem = {
+  _id: string;
+  quantity: number;
+  product: Product;
+};
+
+type User = {
+  name: string;
+};
+
 function MyCart() {
-  const [user, setUser] = useState<any>(null);
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   // ✅ Stepper states
   const [showOrderDetails, setShowOrderDetails] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
+  // const [activeStep, setActiveStep] = useState(0);
 
-  // ✅ Checkout states
-  const [address, setAddress] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+  // // ✅ Checkout states
+  // const [address, setAddress] = useState("");
+  // const [paymentMethod, setPaymentMethod] = useState("");
 
   const token = localStorage.getItem("token");
   const api = import.meta.env.VITE_API_BASE_URL;
@@ -43,6 +61,7 @@ function MyCart() {
   const deliveryCharge = 50;
   const discount = 100;
 
+  // ----------------------- Fetch Cart -----------------------
   const fetchCart = async () => {
     try {
       setLoading(true);
@@ -65,15 +84,15 @@ function MyCart() {
     else setLoading(false);
   }, [token]);
 
-  if (loading) {
+  // ----------------------- Loading & No Token -----------------------
+  if (loading)
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
         <CircularProgress />
       </Box>
     );
-  }
 
-  if (!token) {
+  if (!token)
     return (
       <Box sx={{ textAlign: "center", mt: 10 }}>
         <Typography variant="h6" color="error">
@@ -81,14 +100,8 @@ function MyCart() {
         </Typography>
       </Box>
     );
-  }
 
-  const handlePlaceOrderClick = () => {
-    setShowOrderDetails(true);
-    setActiveStep(0); // start checkout
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-  };
-
+  // ----------------------- Price Calculations -----------------------
   const totalMRP = cartItems.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
     0
@@ -96,23 +109,54 @@ function MyCart() {
   const finalAmount = Math.max(totalMRP + deliveryCharge - discount, 0);
   const totalSavings = discount;
 
-  // ✅ Stepper labels
-  const steps = ["Cart", "Delivery Address", "Payment", "Confirmation"];
+  // ----------------------- Stepper -----------------------
+  // const steps = ["Cart", "Delivery Address", "Payment", "Confirmation"];
+  // const handleNext = () => {
+  //   if (activeStep === 1 && !address) {
+  //     alert("Please enter delivery address");
+  //     return;
+  //   }
+  //   if (activeStep === 2 && !paymentMethod) {
+  //     alert("Please select a payment method");
+  //     return;
+  //   }
+  //   setActiveStep((prev) => prev + 1);
+  // };
+  // const handleBack = () => setActiveStep((prev) => prev - 1);
 
-  const handleNext = () => {
-    if (activeStep === 1 && !address) {
-      alert("Please enter delivery address");
-      return;
-    }
-    if (activeStep === 2 && !paymentMethod) {
-      alert("Please select a payment method");
-      return;
-    }
-    setActiveStep((prev) => prev + 1);
+  const handlePlaceOrderClick = () => {
+    setShowOrderDetails(true);
+    // setActiveStep(0); // start checkout
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
-  const handleBack = () => setActiveStep((prev) => prev - 1);
+  // ----------------------- Remove / Update -----------------------
+  async function handleRemove(cartItemId: string) {
+    try {
+      await axios.delete(`${api}/cart/remove/${cartItemId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchCart();
+    } catch (err) {
+      console.error("Error removing item:", err);
+    }
+  }
 
+  async function updateQuantity(cartItemId: string, newQty: number) {
+    if (newQty < 1) return;
+    try {
+      await axios.put(
+        `${api}/cart/update/${cartItemId}`,
+        { quantity: newQty },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchCart();
+    } catch (err) {
+      console.error("Error updating quantity:", err);
+    }
+  }
+
+  // ----------------------- Render -----------------------
   return (
     <Box sx={{ backgroundColor: "#f1f3f6", minHeight: "100vh" }}>
       <Navbar
@@ -179,7 +223,7 @@ function MyCart() {
                     >
                       <img
                         src={item.product.thumbnail}
-                        alt={item.product.title}
+                        alt={item.product.name}
                         style={{
                           maxWidth: "100%",
                           maxHeight: "100%",
@@ -266,45 +310,11 @@ function MyCart() {
       {/* ✅ Stepper Checkout */}
       {showOrderDetails && (
         <CheckoutStepper
-          activeStep={activeStep}
-          steps={steps}
-          address={address}
-          paymentMethod={paymentMethod}
-          setAddress={setAddress}
-          setPaymentMethod={setPaymentMethod}
-          handleNext={handleNext}
-          handleBack={handleBack}
+         
         />
       )}
     </Box>
   );
-
-  // Remove
-  async function handleRemove(cartItemId: string) {
-    try {
-      await axios.delete(`${api}/cart/remove/${cartItemId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchCart();
-    } catch (err) {
-      console.error("Error removing item:", err);
-    }
-  }
-
-  // Quantity Update
-  async function updateQuantity(cartItemId: string, newQty: number) {
-    if (newQty < 1) return;
-    try {
-      await axios.put(
-        `${api}/cart/update/${cartItemId}`,
-        { quantity: newQty },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      fetchCart();
-    } catch (err) {
-      console.error("Error updating quantity:", err);
-    }
-  }
 }
 
 export default MyCart;

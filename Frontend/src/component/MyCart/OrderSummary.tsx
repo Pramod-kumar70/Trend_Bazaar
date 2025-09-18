@@ -1,4 +1,5 @@
-import { Box, Typography, Card, Divider, Button } from "@mui/material";
+// src/component/MyCart/OrderSummary.tsx
+import { Card, Typography, Divider, Box, Button } from "@mui/material";
 
 interface OrderSummaryProps {
   cartLength: number;

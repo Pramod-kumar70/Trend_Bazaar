@@ -73,6 +73,9 @@ type CartItem = {
   };
 };
 
+
+
+
 export default function CheckoutPage() {
   const token = localStorage.getItem("token");
   const [step, setStep] = useState(0);

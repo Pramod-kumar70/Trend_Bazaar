@@ -26,13 +26,18 @@ type LoginProps = {
   onLoginSuccess?: () => void;
 };
 
-export default function Login({ open, handleClose, onSignupClick, onLoginSuccess }: LoginProps) {
+export default function Login({
+  open,
+  handleClose,
+  onSignupClick,
+  onLoginSuccess,
+}: LoginProps) {
   const [User, setUser] = useState({ Email: "", Pass: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const api = import.meta.env.VITE_API_BASE_URL;
 
-  // ✅ Normal Email/Password Login
+  // ✅ Email/Password login
   async function HandleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
@@ -43,6 +48,7 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
       return;
     }
     setErrors({});
+
     try {
       setLoading(true);
       const response = await fetch(`${api}/users/login`, {
@@ -55,27 +61,24 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
         toast.success("Login Successful! 🎉");
         localStorage.setItem("token", data.token);
         if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-        else localStorage.removeItem("user");
-        setUser({ Email: "", Pass: "" });
         handleClose();
-        if (typeof onLoginSuccess === "function") onLoginSuccess();
+        if (onLoginSuccess) onLoginSuccess();
       } else {
         toast.error(data.message || "Invalid email or password ❌");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Something went wrong. Please try again ❌");
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong ❌");
     } finally {
       setLoading(false);
     }
   }
 
-  // ✅ Google Login
+  // ✅ Google login
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-
       const response = await fetch(`${api}/users/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -85,17 +88,14 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
           photo: user.photoURL,
         }),
       });
-
       const data = await response.json();
       if (response.ok) {
         toast.success("Google Login Successful 🎉");
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         handleClose();
-        if (typeof onLoginSuccess === "function") onLoginSuccess();
-      } else {
-        toast.error(data.message || "Google login failed ❌");
-      }
+        if (onLoginSuccess) onLoginSuccess();
+      } else toast.error(data.message || "Google login failed ❌");
     } catch (err) {
       console.error(err);
       toast.error("Google login error ❌");
@@ -165,8 +165,8 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
                   margin="normal"
                   value={User.Email}
                   onChange={(e) => setUser({ ...User, Email: e.target.value })}
-                  error={Boolean(errors["Email"])}
-                  helperText={errors["Email"]}
+                  error={!!errors.Email}
+                  helperText={errors.Email}
                   autoFocus
                 />
                 <TextField
@@ -177,8 +177,8 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
                   margin="normal"
                   value={User.Pass}
                   onChange={(e) => setUser({ ...User, Pass: e.target.value })}
-                  error={Boolean(errors["Pass"])}
-                  helperText={errors["Pass"]}
+                  error={!!errors.Pass}
+                  helperText={errors.Pass}
                 />
 
                 <Button
@@ -202,7 +202,6 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
 
                 <Divider sx={{ my: 2 }}>OR</Divider>
 
-                {/* Google Login Button */}
                 <Button
                   fullWidth
                   variant="outlined"
@@ -214,7 +213,7 @@ export default function Login({ open, handleClose, onSignupClick, onLoginSuccess
                     borderRadius: 1,
                   }}
                 >
-                  <Box component="img" src={GoogleLogo} width={"20px"} mx={2} /> Continue with Google
+                  <Box component="img" src={GoogleLogo} width="20px" mx={2} /> Continue with Google
                 </Button>
 
                 <Typography textAlign="center" variant="body2" sx={{ mt: 2 }}>
