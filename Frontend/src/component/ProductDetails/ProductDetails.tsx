@@ -78,8 +78,8 @@ function ProductDetails() {
   }, [id]);
 
   const allBrands = [
-  ...new Set(categoryProducts.map((p) => p.brand).filter((b): b is string => !!b))
-];
+    ...new Set(categoryProducts.map((p) => p.brand).filter((b): b is string => !!b))
+  ];
 
   const filteredProducts = categoryProducts.filter((item) => {
     const price = item.price || 0;
@@ -234,7 +234,10 @@ function ProductDetails() {
                         component="img"
                         src={product.thumbnail?.trim() ? product.thumbnail : DefaultTvImg} // safe check
                         alt={product.title || "Product"} // default if undefined
-                        onError={(e) => (e.currentTarget.src = DefaultTvImg)}
+                        onError={(e) => {
+                          const target = e.currentTarget as HTMLImageElement;
+                          target.src = DefaultTvImg;
+                        }}
                         sx={{ width: "100%", height: "200px", objectFit: "contain", mb: 1 }}
                       />
                     </Box>

@@ -4,7 +4,6 @@ import Home from './component/Home/Home';
 import ProductDetails from './component/ProductDetails/ProductDetails';
 import SearchControl from './component/SearchControl/SearchControl';
 import SearchProductDetails from './component/SearchProductDetails/SearchProductDetails';
-import Login from './component/Login/Login';
 import MyCart from './component/MyCart/MyCart';
 import BecomeASeller from './component/BecomeASeller/BecomeASeller';
 import { ToastContainer } from "react-toastify";
@@ -21,25 +20,10 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route
-          path='/login'
-          element={
-            <Login
-              open={true}
-              handleClose={() => { }}
-              onSignupClick={() => { }}
-            />
-          }
-        />
+        
         <Route
           path='/signup'
-          element={
-            <Signup
-              open={true}
-              handleClose={() => { }}
-              onLoginClick={() => { }}
-            />
-          }
+          element={<Signup open={true} handleClose={() => {}} onLoginClick={() => {}} />}
         />
         <Route path='/profile' element={<Profile />} />
         <Route path='/BecomeaSeller' element={<BecomeASeller />} />
