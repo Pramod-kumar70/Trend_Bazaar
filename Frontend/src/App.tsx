@@ -13,6 +13,7 @@ import AddNewProduct from './component/AddNewProduct/AddNewProduct';
 import Profile from './component/Profile/Profile';
 import Signup from './component/Signup/Signup';
 import { Toaster } from "sonner";
+import Login from './component/Login/Login';
 function App() {
 
   return (
@@ -20,7 +21,16 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Home />} />
-        
+        <Route
+          path='/login'
+          element={
+            <Login
+              open={true}
+              handleClose={() => {}}
+              onSignupClick={() => {}}
+            />
+          }
+        />
         <Route
           path='/signup'
           element={<Signup open={true} handleClose={() => {}} onLoginClick={() => {}} />}
