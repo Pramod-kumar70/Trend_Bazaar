@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import "react-toastify/dist/ReactToastify.css";
 
-import Login from "../Login/Login";
+import Login from "../Login/Login.tsx";
 import Signup from "../Signup/Signup";
 import logoimg from "../../assets/chatgptcrp.png";
 
