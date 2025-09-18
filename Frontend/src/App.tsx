@@ -13,7 +13,7 @@ import AddNewProduct from './component/AddNewProduct/AddNewProduct';
 import Profile from './component/Profile/Profile';
 import Signup from './component/Signup/Signup';
 import { Toaster } from "sonner";
-import Login from './component/Login/Login';
+import Login from '../src/component/Login/Login';
 function App() {
 
   return (
