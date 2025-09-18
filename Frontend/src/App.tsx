@@ -21,8 +21,26 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
+        <Route
+          path='/login'
+          element={
+            <Login
+              open={true}
+              handleClose={() => { }}
+              onSignupClick={() => { }}
+            />
+          }
+        />
+        <Route
+          path='/signup'
+          element={
+            <Signup
+              open={true}
+              handleClose={() => { }}
+              onLoginClick={() => { }}
+            />
+          }
+        />
         <Route path='/profile' element={<Profile />} />
         <Route path='/BecomeaSeller' element={<BecomeASeller />} />
         <Route path='/cart/Details/MyCart' element={<MyCart />} />
@@ -63,7 +81,7 @@ function App() {
             fontSize: "15px",              // Professional font size
             fontWeight: 500,                 // Medium weight (not too bold)
             background: "#ffffff",           // White background
-                            // Neutral dark gray text
+            // Neutral dark gray text
             boxShadow: "0 6px 20px rgba(0,0,0,0.12)", // Soft shadow
             border: "1px solid #e5e7eb",     // Light border for structure
           },

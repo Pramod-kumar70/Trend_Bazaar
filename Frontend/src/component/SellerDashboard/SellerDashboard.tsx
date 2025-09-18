@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import {Box,Avatar,Button,IconButton,TextField,Select,MenuItem, InputAdornment,
+import {
+  Box, Avatar, Button, IconButton, TextField, Select, MenuItem, InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
@@ -44,7 +45,7 @@ interface Seller {
 
 export default function SellerDashboard() {
 
-    const api = import.meta.env.VITE_API_BASE_URL;
+  const api = import.meta.env.VITE_API_BASE_URL;
   const { id } = useParams(); // dynamic seller id from params
   const navigate = useNavigate();
 
@@ -62,33 +63,33 @@ export default function SellerDashboard() {
   const [filterCategory, setFilterCategory] = useState("all");
   const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get<{
-        sellerDetails: Seller;
-        products: Product[];
-        totalOrders: number;
-        delivered: number;
-        pending: number;
-      }>(`${api}/seller/dashboard/${id}`);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get<{
+          sellerDetails: Seller;
+          products: Product[];
+          totalOrders: number;
+          delivered: number;
+          pending: number;
+        }>(`${api}/seller/dashboard/${id}`);
 
-      setSeller(res.data.sellerDetails || {});
-      setProducts(res.data.products || []);
-      setStats({
-        totalOrders: res.data.totalOrders ?? 0,
-        delivered: res.data.delivered ?? 0,
-        pending: res.data.pending ?? 0,
-      });
-    } catch (err) {
-      console.error("Error loading dashboard:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchData();
-}, [id]);
+        setSeller(res.data.sellerDetails || {});
+        setProducts(res.data.products || []);
+        setStats({
+          totalOrders: res.data.totalOrders ?? 0,
+          delivered: res.data.delivered ?? 0,
+          pending: res.data.pending ?? 0,
+        });
+      } catch (err) {
+        console.error("Error loading dashboard:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
 
   // Derived lists & categories
   const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
@@ -234,8 +235,19 @@ useEffect(() => {
             </Select>
 
             <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
-              <IconButton color={viewMode === "list" ? "primary" : "default"} onClick={() => setViewMode("list")}><ListAltIcon /></IconButton>
-              <IconButton color={viewMode === "grid" ? "primary" : "default"} onClick={() => setViewMode("grid")}><ViewListIcon /></IconButton>
+              <IconButton
+                color={viewMode === "list" ? "primary" : "default" as "inherit" | "primary" | "secondary" | "default" | "error" | "info" | "success" | "warning"}
+                onClick={() => setViewMode("list")}
+              >
+                <ListAltIcon />
+              </IconButton>
+
+              <IconButton
+                color={viewMode === "grid" ? "primary" : "default" as "inherit" | "primary" | "secondary" | "default" | "error" | "info" | "success" | "warning"}
+                onClick={() => setViewMode("grid")}
+              >
+                <ViewListIcon />
+              </IconButton>
             </div>
           </Box>
 
@@ -266,7 +278,9 @@ useEffect(() => {
                         <div style={{ marginTop: 6 }}>
                           <span className="fd-offer">{prod.Offer ? `${prod.Offer}% OFF` : ""}</span>
                         </div>
-                        <div style={{ marginTop: 8, color: "#888", fontSize: 13 }}>{new Date(prod.createdAt).toLocaleDateString()}</div>
+                        <div style={{ marginTop: 8, color: "#888", fontSize: 13 }}>
+                          {prod.createdAt ? new Date(prod.createdAt).toLocaleDateString() : "N/A"}
+                        </div>
                       </div>
                     </div>
                   </div>

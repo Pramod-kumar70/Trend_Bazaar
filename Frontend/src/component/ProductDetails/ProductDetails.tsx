@@ -77,7 +77,9 @@ function ProductDetails() {
     fetchCategoryProducts();
   }, [id]);
 
-  const allBrands = [...new Set(categoryProducts.map((p) => p.brand).filter(Boolean))];
+  const allBrands = [
+  ...new Set(categoryProducts.map((p) => p.brand).filter((b): b is string => !!b))
+];
 
   const filteredProducts = categoryProducts.filter((item) => {
     const price = item.price || 0;
@@ -124,7 +126,7 @@ function ProductDetails() {
             <Typography fontWeight="bold">Price</Typography>
             <Slider
               value={priceRange}
-              onChange={(e, newValue) => setPriceRange(newValue as number[])}
+              onChange={(_e, newValue) => setPriceRange(newValue as number[])}
               valueLabelDisplay="auto"
               min={0}
               max={100000}
@@ -170,6 +172,7 @@ function ProductDetails() {
                   label={brand}
                 />
               ))}
+
             </FormGroup>
             <Divider sx={{ my: 2 }} />
 
@@ -229,8 +232,8 @@ function ProductDetails() {
                     <Box sx={{ textAlign: "center" }}>
                       <Box
                         component="img"
-                        src={product.thumbnail?.trim() ? product.thumbnail : DefaultTvImg}
-                        alt={product.title || "Product"}
+                        src={product.thumbnail?.trim() ? product.thumbnail : DefaultTvImg} // safe check
+                        alt={product.title || "Product"} // default if undefined
                         onError={(e) => (e.currentTarget.src = DefaultTvImg)}
                         sx={{ width: "100%", height: "200px", objectFit: "contain", mb: 1 }}
                       />

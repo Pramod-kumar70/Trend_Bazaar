@@ -232,7 +232,7 @@ export default function BecomeASeller() {
         >
           <Tabs
             value={tab}
-            onChange={(e, newValue) => setTab(newValue)}
+            onChange={(_e, newValue) => setTab(newValue)}
             centered
             indicatorColor="primary"
             textColor="primary"

@@ -66,31 +66,49 @@ function SearchControl() {
 
   const [onlyDiscount, setOnlyDiscount] = useState(false);
 
-  async function fetchProductByName() {
-    try {
-      let url = "";
-      if (["toptrendy", "sports", "moredata"].includes(name.toLowerCase())) {
-        url = `${api}/product/viewall/${name}`;
-      } else {
-        url = `${api}/product/find/${name}`;
-      }
-
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-      const data = await res.json();
-      const products: Product[] = data.SearchedProduct || data.products || [];
-      setFetchedProduct(products);
-
-      if (products.length === 0) {
-        toast.info(`No products found for "${name}"`);
-      }
-    } catch (err) {
-      console.error("Error while fetching product by name", err);
-      toast.error("Something went wrong while fetching products.");
-    } finally {
-      setLoading(false);
-    }
+ async function fetchProductByName() {
+  if (!name) {
+    // Agar name undefined hai to API call na kare
+    setLoading(false);
+    toast.info("Product name is missing.");
+    return;
   }
+
+  try {
+    let url: string;
+
+    // name ko safe lower case mein convert
+    const lowerName = name.toLowerCase();
+
+    if (["toptrendy", "sports", "moredata"].includes(lowerName)) {
+      url = `${api}/product/viewall/${name}`;
+    } else {
+      url = `${api}/product/find/${name}`;
+    }
+
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    // Type safe fallback
+    const products: Product[] = data.SearchedProduct || data.products || [];
+    setFetchedProduct(products);
+
+    if (products.length === 0) {
+      toast.info(`No products found for "${name}"`);
+    }
+  } catch (err) {
+    console.error("Error while fetching product by name", err);
+    toast.error("Something went wrong while fetching products.");
+  } finally {
+    setLoading(false);
+  }
+}
+
 
   useEffect(() => {
     if (name) {

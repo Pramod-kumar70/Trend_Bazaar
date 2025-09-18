@@ -32,6 +32,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
+
+
 const FLIPKART_BLUE = "#2874f0";
 const FLIPKART_ORANGE = "#fb641b";
 const UPI_QR_MAP: Record<string, string> = {
@@ -179,7 +181,7 @@ export default function CheckoutPage() {
   return (
     <Box sx={{ background: "#f6f7fb", minHeight: "100vh", p: { xs: 2, md: 4 } }}>
       <Grid container spacing={3} justifyContent="center">
-        <Grid size={8}>
+        <Grid item lg={8}>
           <Typography variant="h5" fontWeight={800} color={FLIPKART_BLUE} mb={2}>Checkout</Typography>
 
           {/* Step 0: Cart */}
