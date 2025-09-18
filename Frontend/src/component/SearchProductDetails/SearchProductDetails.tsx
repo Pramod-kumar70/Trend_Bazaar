@@ -61,7 +61,7 @@ function SearchProductDetails() {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [relatedLoading, setRelatedLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [alreadyInCart, setAlreadyInCart] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [buying, setBuying] = useState(false);
@@ -121,7 +121,7 @@ function SearchProductDetails() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      toast.warn("⚠️ Please login to continue");
+      toast.warning("⚠️ Please login to continue");
       navigate("/login");
       return;
     }
@@ -155,7 +155,7 @@ function SearchProductDetails() {
       <Navbar Bgcolor='#a8d5e2' TextColor='black' ImageSrc={FlipkartSecImg} imageWidth="40px" />
       <Grid container justifyContent={"space-evenly"} mt={"90px"}>
         {/* Product Image + Buttons */}
-        <Grid size={4}>
+        <Grid item lg={4}>
           <img
             src={product.thumbnail?.trim() ? product.thumbnail : DefaultTvImg}
             alt={product.title}
@@ -189,7 +189,7 @@ function SearchProductDetails() {
             </Grid>
 
             <Grid
-            item
+              item
               lg={3.5}
               className="HoverEffect"
               sx={{
@@ -245,7 +245,7 @@ function SearchProductDetails() {
               {product.name || product.title}
             </Typography>
 
-            {(product.name || product.title)?.length > 50 && (
+            {((product.name || product.title) ?? "").length > 50 && (
               <Button
                 onClick={() => setIsExpanded(!isExpanded)}
                 sx={{
@@ -338,7 +338,7 @@ function SearchProductDetails() {
               {relatedProducts
                 .filter((p) => p._id !== product._id)
                 .slice(0, 5)
-                .map((item:Product) => (
+                .map((item: Product) => (
                   <Grid item lg={2.2} key={item._id}>
                     <Card
                       sx={{

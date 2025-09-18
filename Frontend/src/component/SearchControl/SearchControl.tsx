@@ -52,7 +52,7 @@ interface Product {
 
 function SearchControl() {
   const navigate = useNavigate();
-  const { name } = useParams();
+  const { name } = useParams<{ name: string }>();
   const [fetchedProduct, setFetchedProduct] = useState<Product[]>([]);
 
   const [loading, setLoading] = useState(true);
@@ -286,7 +286,7 @@ function SearchControl() {
                       position: "relative",
                       cursor: "pointer",
                     }}
-                    onClick={() => navigate(`/search/${name}/${item._id}`)} // 🔹 Card click se navigate
+                   onClick={() => navigate(`/search/${name!}/${item._id}`)} // 🔹 Card click se navigate
                   >
                     {/* Wishlist Icon */}
                     <IconButton
@@ -404,9 +404,9 @@ function SearchControl() {
                         <Typography fontSize={13} color="text.secondary">
                           OS: {item.smartfeatures?.os || "Android TV"}
                         </Typography>
-                       <Typography fontSize={13} color="text.secondary">
+                        <Typography fontSize={13} color="text.secondary">
                           Apps:{" "}
-                          {item.appsSupport?.length > 0
+                          {item.appsSupport && item.appsSupport.length > 0
                             ? item.appsSupport.slice(0, 2).join(", ") + "+"
                             : "YouTube, Netflix, Prime Video"}
                         </Typography>

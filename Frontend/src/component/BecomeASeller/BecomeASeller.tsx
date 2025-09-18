@@ -192,19 +192,19 @@ export default function BecomeASeller() {
       {/* COUNTERS SECTION */}
       <Box sx={{ py: 6, backgroundColor: "#fff" }}>
         <Grid container spacing={4} justifyContent="center" textAlign="center">
-          <Grid size={3}>
+          <Grid item lg={3}>
             <Typography variant="h3" fontWeight="bold" color="primary">
               {counters.sellers.toLocaleString()}+
             </Typography>
             <Typography variant="h6">Active Sellers</Typography>
           </Grid>
-          <Grid size={3}>
+          <Grid item lg={3}>
             <Typography variant="h3" fontWeight="bold" color="primary">
               {counters.products.toLocaleString()}+
             </Typography>
             <Typography variant="h6">Products Listed</Typography>
           </Grid>
-          <Grid size={3}>
+          <Grid item lg={3}>
             <Typography variant="h3" fontWeight="bold" color="primary">
               {counters.orders.toLocaleString()}+
             </Typography>
@@ -250,7 +250,7 @@ export default function BecomeASeller() {
             {tab === 0 ? (
               <form onSubmit={handleRegister}>
                 <Grid container spacing={2}>
-                  <Grid size={6}>
+                  <Grid item lg={6}>
                     <TextField
                       label="Full Name"
                       name="fullname"
@@ -259,7 +259,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid size={6}>
+                  <Grid item lg={6}>
                     <TextField
                       label="Business Name"
                       name="businessName"
@@ -268,7 +268,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid size={6}>
+                  <Grid item lg={6}>
                     <TextField
                       label="Email Address"
                       name="email"
@@ -278,7 +278,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid size={6}>
+                  <Grid item lg={6}>
                     <TextField
                       label="Phone Number"
                       name="phone"
@@ -287,7 +287,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid size={6}>
+                  <Grid item lg={6}>
                     <TextField
                       label="Password"
                       name="password"
@@ -296,7 +296,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid size={12}>
+                  <Grid item lg={12}>
                     <TextField
                       label="Business Address"
                       name="businessAddress"
@@ -307,7 +307,7 @@ export default function BecomeASeller() {
                       rows={3}
                     />
                   </Grid>
-                  <Grid size={12}>
+                  <Grid item lg={12}>
                     <Button
                       variant="contained"
                       fullWidth
@@ -327,7 +327,7 @@ export default function BecomeASeller() {
             ) : (
               <form onSubmit={handleLogin}>
                 <Grid container spacing={2}>
-                  <Grid size={12}>
+                  <Grid item lg={12}>
                     <TextField
                       label="Email"
                       name="email"
@@ -337,7 +337,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid size={12}>
+                  <Grid item lg={12}>
                     <TextField
                       label="Password"
                       name="password"
@@ -347,7 +347,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid size={12}>
+                  <Grid item lg={12}>
                     <Button
                       variant="contained"
                       fullWidth
@@ -400,7 +400,7 @@ export default function BecomeASeller() {
               img: "https://randomuser.me/api/portraits/men/53.jpg",
             },
           ].map((seller, i) => (
-            <Grid size={3} key={i}>
+            <Grid item lg={3} key={i}>
               <Card
                 sx={{
                   p: 3,
@@ -443,7 +443,7 @@ export default function BecomeASeller() {
           Frequently Asked Questions
         </Typography>
         <Grid container justifyContent="center" sx={{ mt: 3 }}>
-          <Grid size={8}>
+          <Grid item lg={8}>
             {[
               {
                 q: "How much does it cost to join?",
