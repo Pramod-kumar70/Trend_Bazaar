@@ -134,11 +134,11 @@ export default function Navbar({
               mt: isSmallScreen ? 1 : 0,
               justifyContent: isSmallScreen ? "space-between" : "flex-end",
               width: "100%",
-              fontSize:{xs:"10px" ,}
+              
             }}
           >
             <Typography
-              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" } }}
+              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"10px"} }}
               onClick={() => window.open("/BecomeaSeller", "_blank")}
             >
               <AiOutlineShop style={{ fontSize: 20, marginTop: -3 }} /> Become a Seller
@@ -148,7 +148,7 @@ export default function Navbar({
               sx={{
                 cursor: "pointer",
                 fontWeight: 500,
-                "&:hover": { textDecoration: "underline" },
+                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"10px"} 
               }}
               onClick={(e) => setMoreAnchor(moreAnchor ? null : e.currentTarget)}
             >
@@ -171,7 +171,7 @@ export default function Navbar({
                 fontWeight: 500,
                 display: "flex",
                 alignItems: "center",
-                "&:hover": { textDecoration: "underline" },
+                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"10px"} 
               }}
               onClick={() => {
                 if (token) navigate("/cart/Details/MyCart");
@@ -204,7 +204,7 @@ export default function Navbar({
               </>
             ) : (
               <Typography
-                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" }}
+                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" , fontSize:{md:"16px" ,sm:"13px" ,xs:"10px" }}}
                 onClick={() => setOpenLogin(true)}
               >
                 <VscAccount style={{ marginRight: "5px" }} /> Login
