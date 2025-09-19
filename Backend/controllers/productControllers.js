@@ -11,7 +11,7 @@ const getAllProducts = async (req, res) => {
       category: { $in: ["Sports", "sports"] }
     }).limit(7);
 
-    const TvData = await Product.find({category:{$in:["TV" ,"Tv", "tv"]}}).limit(7)
+    const TvData = await Product.find({category:{$in:["TV" ,"Tv", "tv"]}}).limit(8)
 
     const moreData = await Product.find({
       category: { $in: ["beauty", "food", "toys", "Fashion"] }
