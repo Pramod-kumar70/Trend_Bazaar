@@ -20,25 +20,25 @@ function Slider() {
       style={{ marginTop: "66px" }}
     >
       <Carousel.Item>
-        <Box component="img" src={img7} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"}}} width="100%" />
+        <Box component="img" src={img7} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />
       </Carousel.Item>
       <Carousel.Item>
-        <Box component="img" src={img4} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"}}} width="100%" />
+        <Box component="img" src={img4} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />
       </Carousel.Item>
       <Carousel.Item>
-        <Box component="img" src={img5} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"}}} width="100%" />
+        <Box component="img" src={img5} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />
       </Carousel.Item>
       <Carousel.Item>
-        <Box component="img" src={img3} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"}}} width="100%" />
+        <Box component="img" src={img3} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />
       </Carousel.Item>
       <Carousel.Item>
-        <Box component="img" src={img6} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"}}} width="100%" />
+        <Box component="img" src={img6} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />
       </Carousel.Item>
       <Carousel.Item>
-        <Box component="img" src={img2} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"}}} width="100%" />
+        <Box component="img" src={img2} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />
       </Carousel.Item>
       <Carousel.Item>
-        <Box component="img" src={img1} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"}}} width="100%" />
+        <Box component="img" src={img1} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />
       </Carousel.Item>
     </Carousel>
   );

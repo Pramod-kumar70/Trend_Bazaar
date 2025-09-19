@@ -102,7 +102,7 @@ export default function Navbar({
         <Toolbar sx={{ display: "flex", flexDirection:{md:"row" ,sm:"column" , xs:"column"}, }}>
           {/* Top Row (Logo + Searchbar) */}
           <Grid container alignItems="center" justifyContent={'space-between'}>
-            <Grid item xs={2} md={3}>
+            <Grid item xs={1} md={3}>
               <Box
                 component="img"
                 src={ImageSrc}
@@ -111,7 +111,7 @@ export default function Navbar({
                 onClick={() => navigate("/")}
               />
             </Grid>
-            <Grid item xs={7} md={8}>
+            <Grid item xs={8} md={8}>
               <Search>
                 <StyledInputBase
                   placeholder="Search for products, brands and more"
@@ -130,10 +130,11 @@ export default function Navbar({
           <Box
             sx={{
               display: "flex",
-              gap: 4,
+              gap:{md:4 ,sm:2 ,xs:1},
               mt: isSmallScreen ? 1 : 0,
               justifyContent: isSmallScreen ? "space-between" : "flex-end",
               width: "100%",
+              fontSize:{xs:"10px" ,}
             }}
           >
             <Typography
