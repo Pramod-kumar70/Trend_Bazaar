@@ -13,7 +13,7 @@ import AddNewProduct from './component/AddNewProduct/AddNewProduct';
 import Profile from './component/Profile/Profile';
 import Signup from './component/Signup/Signup';
 import { Toaster } from "sonner";
-import Login from '../src/component/Login/Login';
+import LogIn from './component/Login/LogIn';
 function App() {
 
   return (
@@ -24,7 +24,7 @@ function App() {
         <Route
           path='/login'
           element={
-            <Login
+            <LogIn
               open={true}
               handleClose={() => {}}
               onSignupClick={() => {}}

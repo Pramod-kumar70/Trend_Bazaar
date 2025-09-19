@@ -26,7 +26,7 @@ type LoginProps = {
   onLoginSuccess?: () => void;
 };
 
-export default function Login({
+export default function LogIn({
   open,
   handleClose,
   onSignupClick,
