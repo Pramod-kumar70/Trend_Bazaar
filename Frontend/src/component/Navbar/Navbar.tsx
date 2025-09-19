@@ -98,10 +98,10 @@ export default function Navbar({
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3} }>
+      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3, pt:1} }>
         <Toolbar sx={{ display: "flex", flexDirection:{md:"row" ,sm:"column" , xs:"column"}, }}>
           {/* Top Row (Logo + Searchbar) */}
-          <Grid container alignItems="center" justifyContent={'space-between'}>
+          <Grid container alignItems="center" justifyContent={'space-between'} px={1}>
             <Grid item xs={1} md={3}>
               <Box
                 component="img"
