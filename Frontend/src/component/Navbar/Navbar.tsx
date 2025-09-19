@@ -9,27 +9,20 @@ import {
   Menu,
   MenuItem,
   InputBase,
+  useMediaQuery,
+  Grid,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import { Search as SearchIcon } from "@mui/icons-material";
 import { VscAccount } from "react-icons/vsc";
 import { GrCart } from "react-icons/gr";
 import { AiOutlineShop } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import "react-toastify/dist/ReactToastify.css";
 
 import Login from "../Login/LogIn";
 import Signup from "../Signup/Signup";
 import logoimg from "../../assets/chatgptcrp.png";
-
-// Props type
-interface NavbarProps {
-  Bgcolor?: string;
-  TextColor?: string;
-  ImageSrc?: string;
-  imageWidth?: string | number;
-}
 
 const Search = styled("div")(() => ({
   position: "relative",
@@ -37,7 +30,6 @@ const Search = styled("div")(() => ({
   alignItems: "center",
   backgroundColor: "#f0f5ff",
   borderRadius: "2px",
-  marginLeft: 20,
   maxWidth: "550px",
   width: "100%",
   height: "36px",
@@ -70,9 +62,12 @@ export default function Navbar({
   TextColor = "Black",
   ImageSrc = logoimg,
   imageWidth = "130px",
-}: NavbarProps) {
+}) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const [user, setUser] = useState<any>(() => {
     const u = localStorage.getItem("user");
@@ -103,86 +98,72 @@ export default function Navbar({
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 }}>
-        <Toolbar sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          {/* Logo */}
+      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3} }>
+        <Toolbar sx={{ display: "flex", flexDirection:{md:"row" ,sm:"column" , xs:"column"}, }}>
+          {/* Top Row (Logo + Searchbar) */}
+          <Grid container alignItems="center" justifyContent={'space-between'}>
+            <Grid item xs={2} md={3}>
+              <Box
+                component="img"
+                src={ImageSrc}
+                alt="Logo"
+                sx={{ width:{md:imageWidth , sm:"100px" , xs:"100px"}, cursor: "pointer", borderRadius: 1.5 }}
+                onClick={() => navigate("/")}
+              />
+            </Grid>
+            <Grid item xs={7} md={8}>
+              <Search>
+                <StyledInputBase
+                  placeholder="Search for products, brands and more"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                />
+                <SearchIconWrapper onClick={handleSearch}>
+                  <SearchIcon style={{ color: "#0a2647" }} />
+                </SearchIconWrapper>
+              </Search>
+            </Grid>
+          </Grid>
+
+          {/* Bottom Row (Only show on md and below OR inline on lg) */}
           <Box
-            component="img"
-            src={ImageSrc}
-            alt="Logo"
-            sx={{ width: imageWidth, cursor: "pointer", borderRadius: 1.5 }}
-            onClick={() => navigate("/")}
-          />
+            sx={{
+              display: "flex",
+              gap: 4,
+              mt: isSmallScreen ? 1 : 0,
+              justifyContent: isSmallScreen ? "space-between" : "flex-end",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" } }}
+              onClick={() => window.open("/BecomeaSeller", "_blank")}
+            >
+              <AiOutlineShop style={{ fontSize: 20, marginTop: -3 }} /> Become a Seller
+            </Typography>
 
-          {/* Search Bar */}
-          <Search>
-            <StyledInputBase
-              placeholder="Search for products, brands and more"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
-            <SearchIconWrapper onClick={handleSearch}>
-              <SearchIcon style={{ color: "#0a2647" }} />
-            </SearchIconWrapper>
-          </Search>
-
-          {/* Right Side */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto" }}>
             <Typography
               sx={{
                 cursor: "pointer",
                 fontWeight: 500,
                 "&:hover": { textDecoration: "underline" },
               }}
-              onClick={() => window.open("/BecomeaSeller", "_blank")}
+              onClick={(e) => setMoreAnchor(moreAnchor ? null : e.currentTarget)}
             >
-              <AiOutlineShop style={{ fontSize: 20, marginTop: -3 }} /> Become a Seller
+              More {moreAnchor ? "▲" : "▼"}
             </Typography>
+            <Menu
+              anchorEl={moreAnchor}
+              open={Boolean(moreAnchor)}
+              onClose={() => setMoreAnchor(null)}
+            >
+              <MenuItem>🔔 Notification Preferences</MenuItem>
+              <MenuItem>📞 24x7 Customer Care</MenuItem>
+              <MenuItem>📢 Advertise</MenuItem>
+              <MenuItem>⬇️ Download App</MenuItem>
+            </Menu>
 
-            {/* More Dropdown */}
-            <Box>
-              <Typography
-                sx={{
-                  cursor: "pointer",
-                  fontWeight: 500,
-                  display: "flex",
-                  alignItems: "center",
-                  "&:hover": { textDecoration: "underline" },
-                }}
-                onClick={(e) => setMoreAnchor(moreAnchor ? null : e.currentTarget)}
-              >
-                More {moreAnchor ? "▲" : "▼"}
-              </Typography>
-
-              <Menu
-                anchorEl={moreAnchor}
-                open={Boolean(moreAnchor)}
-                onClose={() => setMoreAnchor(null)}
-                disableScrollLock
-                PaperProps={{
-                  sx: {
-                    mt: 1,
-                    minWidth: 220,
-                    borderRadius: 1.5,
-                    boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
-                    "& .MuiMenuItem-root": {
-                      fontSize: "0.9rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                    },
-                  },
-                }}
-              >
-                <MenuItem onClick={() => setMoreAnchor(null)}>🔔 Notification Preferences</MenuItem>
-                <MenuItem onClick={() => setMoreAnchor(null)}>📞 24x7 Customer Care</MenuItem>
-                <MenuItem onClick={() => setMoreAnchor(null)}>📢 Advertise</MenuItem>
-                <MenuItem onClick={() => setMoreAnchor(null)}>⬇️ Download App</MenuItem>
-              </Menu>
-            </Box>
-
-            {/* Cart */}
             <Typography
               sx={{
                 cursor: "pointer",
@@ -199,7 +180,6 @@ export default function Navbar({
               <GrCart style={{ marginRight: "2px", fontSize: 18 }} /> Cart
             </Typography>
 
-            {/* User Section */}
             {user ? (
               <>
                 <IconButton onClick={(e) => setProfileMenuAnchor(e.currentTarget)}>

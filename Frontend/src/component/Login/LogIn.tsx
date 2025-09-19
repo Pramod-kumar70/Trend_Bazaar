@@ -116,7 +116,9 @@ export default function LogIn({
           <Grid
             className="BgImg"
             item
-            xs={4}
+            xs={11}
+            sm={11}
+            md={4}
             sx={{
               color: "white",
               display: "flex",
@@ -136,7 +138,9 @@ export default function LogIn({
           {/* Right Section */}
           <Grid
             item
-            xs={8}
+            xs={11}
+            sm={11}
+            md={8}
             sx={{
               backgroundColor: "#f1f3f6",
               display: "flex",
