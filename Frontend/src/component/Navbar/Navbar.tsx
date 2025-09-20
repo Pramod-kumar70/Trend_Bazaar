@@ -61,7 +61,7 @@ export default function Navbar({
   Bgcolor = "#ffdac6",
   TextColor = "Black",
   ImageSrc = logoimg,
-  imageWidth = "110px",
+  imageWidth = "150px",
 }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -107,7 +107,7 @@ export default function Navbar({
                 component="img"
                 src={ImageSrc}
                 alt="Logo"
-                sx={{ width:{md:imageWidth , sm:"50px" , xs:"40px"}, cursor: "pointer", borderRadius: 1.5 }}
+                sx={{ width:{md:imageWidth , sm:"50px" , xs:"100px" ,lg:imageWidth}, cursor: "pointer", borderRadius: 1.5 }}
                 onClick={() => navigate("/")}
               />
             </Grid>

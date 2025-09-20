@@ -17,8 +17,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Navbar from "../Navbar/Navbar";
 import "./BecomeASeller.css";
 import { useRef, useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 import { useNavigate } from "react-router-dom";
 
