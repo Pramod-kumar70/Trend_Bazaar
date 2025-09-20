@@ -17,6 +17,17 @@ import axios from "axios";
 import DefaultTvImg from "../../assets/DTV.png";
 import { MdStar } from "react-icons/md";
 import FlipkartSecImg from "../../assets/chatgptlogoone.png";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+
+
+
+
 // product
 interface Product {
   _id: string;
@@ -108,8 +119,10 @@ function ProductDetails() {
 
       <Grid container spacing={2} mt={"90px"} px={2}>
         <Grid item xs={12} sm={12} md={3} lg={1.5}>
+          {/* md+ screens → sidebar filters */}
           <Box
             sx={{
+              display: { xs: "none", sm: "none", md: "block" },
               bgcolor: "#fff",
               borderRadius: "8px",
               p: 2,
@@ -172,7 +185,6 @@ function ProductDetails() {
                   label={brand}
                 />
               ))}
-
             </FormGroup>
             <Divider sx={{ my: 2 }} />
 
@@ -181,6 +193,74 @@ function ProductDetails() {
               control={<Checkbox checked={onlyDiscount} onChange={(e) => setOnlyDiscount(e.target.checked)} />}
               label="Only with Offers"
             />
+          </Box>
+
+          {/* sm / xs screens → accordion filters */}
+          <Box sx={{ display: { xs: "block", sm: "block", md: "none" }, mt: 1 }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography fontWeight="bold" sx={{ color: "#2874f0" }}>Filters</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography fontWeight="bold">Price</Typography>
+                <Slider
+                  value={priceRange}
+                  onChange={(_e, newValue) => setPriceRange(newValue as number[])}
+                  valueLabelDisplay="auto"
+                  min={0}
+                  max={100000}
+                  step={1000}
+                />
+                <Divider sx={{ my: 2 }} />
+
+                <Typography fontWeight="bold">Customer Rating</Typography>
+                <FormGroup>
+                  {[4, 3, 2].map((r) => (
+                    <FormControlLabel
+                      key={r}
+                      control={
+                        <Checkbox
+                          checked={selectedRatings.includes(r)}
+                          onChange={(e) =>
+                            e.target.checked
+                              ? setSelectedRatings([...selectedRatings, r])
+                              : setSelectedRatings(selectedRatings.filter((val) => val !== r))
+                          }
+                        />
+                      }
+                      label={`${r}★ & above`}
+                    />
+                  ))}
+                </FormGroup>
+                <Divider sx={{ my: 2 }} />
+
+                <FormGroup sx={{ maxHeight: "150px", overflowY: "auto" }}>
+                  {allBrands.map((brand) => (
+                    <FormControlLabel
+                      key={brand}
+                      control={
+                        <Checkbox
+                          checked={selectedBrands.includes(brand)}
+                          onChange={(e) =>
+                            e.target.checked
+                              ? setSelectedBrands([...selectedBrands, brand])
+                              : setSelectedBrands(selectedBrands.filter((b) => b !== brand))
+                          }
+                        />
+                      }
+                      label={brand}
+                    />
+                  ))}
+                </FormGroup>
+                <Divider sx={{ my: 2 }} />
+
+                <Typography fontWeight="bold">Offers</Typography>
+                <FormControlLabel
+                  control={<Checkbox checked={onlyDiscount} onChange={(e) => setOnlyDiscount(e.target.checked)} />}
+                  label="Only with Offers"
+                />
+              </AccordionDetails>
+            </Accordion>
           </Box>
         </Grid>
 

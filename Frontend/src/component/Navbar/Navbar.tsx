@@ -97,8 +97,8 @@ export default function Navbar({
   };
 
   return (
-    <Box  mb={9}>
-      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 ,py:{lg:0 ,md:1,sm:.5 ,xs:.5}} }>
+    <Box >
+      <AppBar position="relative" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 ,py:{lg:0 ,md:1,sm:.5 ,xs:.5}} }>
         <Toolbar sx={{ display: "flex", flexDirection:{md:"row" ,sm:"column" , xs:"column"}, }}>
           {/* Top Row (Logo + Searchbar) */}
           <Grid container alignItems="center" justifyContent={'space-between'} px={1}>
@@ -107,7 +107,7 @@ export default function Navbar({
                 component="img"
                 src={ImageSrc}
                 alt="Logo"
-                sx={{ width:{md:imageWidth , sm:"50px" , xs:"100px" ,lg:imageWidth}, cursor: "pointer", borderRadius: 1.5 }}
+                sx={{ width:{md:imageWidth , sm:"50px" , xs:"80px" ,lg:imageWidth}, cursor: "pointer", borderRadius: 1.5 }}
                 onClick={() => navigate("/")}
               />
             </Grid>
@@ -134,6 +134,7 @@ export default function Navbar({
               mt: isSmallScreen ? 1 : 0,
               justifyContent: isSmallScreen ? "space-between" : "flex-end",
               width: "100%",
+              alignItems:"center"
               
             }}
           >
@@ -183,8 +184,8 @@ export default function Navbar({
 
             {user ? (
               <>
-                <IconButton onClick={(e) => setProfileMenuAnchor(e.currentTarget)}>
-                  <Avatar alt={user.name} src={user.profileImage || ""} />
+                <IconButton onClick={(e) => setProfileMenuAnchor(e.currentTarget)} sx={{p:0}}> 
+                  <Avatar alt={user.name} src={user.profileImage || ""}  sx={{ width: 28, height: 28, fontSize: "0.75rem" }} />
                 </IconButton>
                 <Menu
                   anchorEl={profileMenuAnchor}
