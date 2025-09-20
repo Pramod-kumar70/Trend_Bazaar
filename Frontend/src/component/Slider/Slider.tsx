@@ -17,7 +17,8 @@ function Slider() {
       indicators={true} // ✅ Show dots
       interval={2500} // Auto slide
       pause={false} // Auto slide without pause on hover
-      style={{ marginTop: "66px" }}
+      style={{ marginTop: "66px", display:"none" }}
+      
     >
       <Carousel.Item>
         <Box component="img" src={img7} sx={{height:{lg:"280px" , md:"210px" , xs:"70px" ,sm:"180px"} }} width="100%" />

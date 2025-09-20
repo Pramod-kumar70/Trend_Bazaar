@@ -103,7 +103,7 @@ export default function LogIn({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={handleClose}  >
       <Box sx={{ position: "absolute", top: 10, right: 10, zIndex: 10 }}>
         <IconButton onClick={handleClose}>
           <CloseIcon />
@@ -111,20 +111,22 @@ export default function LogIn({
       </Box>
 
       <DialogContent sx={{ p: 0 }}>
-        <Grid container sx={{ minHeight: "70vh" }}>
+        <Grid container >
           {/* Left Section */}
           <Grid
             className="BgImg"
             item
-            xs={11}
-            sm={11}
-            md={4}
+            xs={12}
+            sm={12}
+            md={5}
+            lg={6}
             sx={{
               color: "white",
               display: "flex",
               flexDirection: "column",
               px: 4,
-              py: 3,
+              
+              height:{xs:"350px", md:"600px",lg:"580px" ,sm:"300px"}
             }}
           >
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
@@ -138,11 +140,12 @@ export default function LogIn({
           {/* Right Section */}
           <Grid
             item
-            xs={11}
-            sm={11}
-            md={8}
+            xs={12}
+            sm={12}
+            md={7}
+            lg={6}
             sx={{
-              backgroundColor: "#f1f3f6",
+             
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -157,7 +160,7 @@ export default function LogIn({
                 maxWidth: 400,
                 borderRadius: 1.5,
                 backgroundColor: "white",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.15)",
+               
               }}
             >
               <form onSubmit={HandleSubmit} noValidate>
@@ -215,9 +218,10 @@ export default function LogIn({
                     fontWeight: "bold",
                     textTransform: "none",
                     borderRadius: 1,
+                    fontSize:13
                   }}
                 >
-                  <Box component="img" src={GoogleLogo} width="20px" mx={2} /> Continue with Google
+                  <Box component="img" src={GoogleLogo} width="20px" mx={1} /> Continue with Google
                 </Button>
 
                 <Typography textAlign="center" variant="body2" sx={{ mt: 2 }}>

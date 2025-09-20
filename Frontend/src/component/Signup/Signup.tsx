@@ -85,7 +85,7 @@ export default function Signup({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={handleClose}>
       <Box sx={{ position: "absolute", top: 10, right: 10, zIndex: 10 }}>
         <IconButton onClick={handleClose}>
           <CloseIcon />
@@ -93,11 +93,14 @@ export default function Signup({
       </Box>
 
       <DialogContent sx={{ p: 0 }}>
-        <Grid container sx={{ minHeight: "70vh" }}>
+        <Grid container >
           {/* Left Section */}
           <Grid
             item
-            xs={5}
+            xs={12}
+            sm={12}
+            md={5}
+            lg={6}
             className="BgImg"
             sx={{
               color: "white",
@@ -105,6 +108,7 @@ export default function Signup({
               flexDirection: "column",
               px: 4,
               py: 3,
+              height:{xs:"350px", md:"600px",lg:"600px" ,sm:"300px"}
             }}
           >
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
@@ -118,24 +122,27 @@ export default function Signup({
           {/* Right Section */}
           <Grid
             item
-            xs={7}
+            xs={12}
+            sm={12}
+            md={7}
+            lg={6}
             sx={{
-              backgroundColor: "#f1f3f6",
+             
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              py: 5,
+              
             }}
           >
             <Paper
               elevation={0}
               sx={{
                 p: 5,
-                width: "100%",
-                maxWidth: 400,
+               
+                
                 borderRadius: 1.5,
                 backgroundColor: "white",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.15)",
+                
               }}
             >
               <TextField
@@ -209,7 +216,7 @@ export default function Signup({
                 }}
                 onClick={handleGoogleSignup}
               >
-                <Box component="img" src={GoogleLogo} width={"20px"} mx={2} />{" "}
+                <Box component="img" src={GoogleLogo} width={"20px"} mx={1} fontSize={13} />{" "}
                 Sign up with Google
               </Button>
 

@@ -61,7 +61,7 @@ export default function Navbar({
   Bgcolor = "#ffdac6",
   TextColor = "Black",
   ImageSrc = logoimg,
-  imageWidth = "130px",
+  imageWidth = "110px",
 }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -97,8 +97,8 @@ export default function Navbar({
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3, pt:1} }>
+    <Box  mb={9}>
+      <AppBar position="absolute" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 ,py:{lg:0 ,md:1,sm:.5 ,xs:.5}} }>
         <Toolbar sx={{ display: "flex", flexDirection:{md:"row" ,sm:"column" , xs:"column"}, }}>
           {/* Top Row (Logo + Searchbar) */}
           <Grid container alignItems="center" justifyContent={'space-between'} px={1}>
@@ -107,7 +107,7 @@ export default function Navbar({
                 component="img"
                 src={ImageSrc}
                 alt="Logo"
-                sx={{ width:{md:imageWidth , sm:"100px" , xs:"100px"}, cursor: "pointer", borderRadius: 1.5 }}
+                sx={{ width:{md:imageWidth , sm:"100px" , xs:"80px"}, cursor: "pointer", borderRadius: 1.5 }}
                 onClick={() => navigate("/")}
               />
             </Grid>
@@ -138,17 +138,17 @@ export default function Navbar({
             }}
           >
             <Typography
-              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"10px"} }}
+              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"} }}
               onClick={() => window.open("/BecomeaSeller", "_blank")}
             >
-              <AiOutlineShop style={{ fontSize: 20, marginTop: -3 }} /> Become a Seller
+              <AiOutlineShop style={{ marginTop: -3 }} /> Become a Seller
             </Typography>
 
             <Typography
               sx={{
                 cursor: "pointer",
                 fontWeight: 500,
-                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"10px"} 
+                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"} 
               }}
               onClick={(e) => setMoreAnchor(moreAnchor ? null : e.currentTarget)}
             >
@@ -171,14 +171,14 @@ export default function Navbar({
                 fontWeight: 500,
                 display: "flex",
                 alignItems: "center",
-                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"10px"} 
+                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"} 
               }}
               onClick={() => {
                 if (token) navigate("/cart/Details/MyCart");
                 else setOpenLogin(true);
               }}
             >
-              <GrCart style={{ marginRight: "2px", fontSize: 18 }} /> Cart
+              <GrCart style={{ marginRight: "2px", }} /> Cart
             </Typography>
 
             {user ? (
@@ -204,7 +204,7 @@ export default function Navbar({
               </>
             ) : (
               <Typography
-                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" , fontSize:{md:"16px" ,sm:"13px" ,xs:"10px" }}}
+                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" , fontSize:{md:"16px" ,sm:"13px" ,xs:"13px" }}}
                 onClick={() => setOpenLogin(true)}
               >
                 <VscAccount style={{ marginRight: "5px" }} /> Login

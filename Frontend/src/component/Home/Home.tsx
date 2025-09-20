@@ -58,7 +58,7 @@ function Home() {
     backgroundColor: "#fff",
     borderRadius: "10px",
     padding: "15px",
-    margin: "20px",
+    margin:"10px",
     boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
   };
 
@@ -80,6 +80,7 @@ function Home() {
     border: "2px solid transparent",
     backgroundColor: "white",
     transition: "all 0.3s ease",
+    
     "&:hover": {
       transform: "translateY(-3px)",
       boxShadow: "0px 2px 6px rgba(75, 78, 78, 0.4)",
@@ -100,6 +101,7 @@ function Home() {
     transition: "all 0.2s ease",
     borderRadius: "5px",
     paddingX: 2,
+    
   };
 
   // Section header with View All
@@ -116,10 +118,10 @@ function Home() {
         px: 1,
       }}
     >
-      <Typography variant="h5" fontWeight={700}>
+      <Typography variant="h5" fontWeight={700} sx={{fontSize:{md:"16px" ,sm:"13px" ,xs:"17px"}}}>
         {title}
       </Typography>
-      <Button variant="contained" sx={viewAllButtonStyle} onClick={onViewAll}>
+      <Button variant="contained" sx={{...viewAllButtonStyle , fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"}}}  onClick={onViewAll} >
         View All
       </Button>
     </Box>
@@ -142,18 +144,19 @@ function Home() {
     return (
       <Box sx={containerStyle}>
         <SectionHeader title={title} onViewAll={() => navigate(`/search/${route}`)} />
-        <Grid container spacing={2} justifyContent={"space-evenly"}>
+        <Grid container  justifyContent={"space-evenly"}>
           {items.map((item: Product) => (
             <Grid
               item
               xs={6}
               sm={3}
-              md={2}
+              md={3}
               lg={1.5}
               key={item._id}
               textAlign={"center"}
               sx={gridItemStyle}
               onClick={() => handleCardClick(item._id)}
+             
             >
               <Box
                 component="img"
