@@ -3,7 +3,7 @@ import Navbar from "../Navbar/Navbar";
 import Slider from "./../Slider/Slider";
 import { Box, Grid, Typography, Button, CircularProgress, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import "react-toastify/dist/ReactToastify.css";
 import "./Home.css";
 import rupee from "../../assets/image copy 2.png";

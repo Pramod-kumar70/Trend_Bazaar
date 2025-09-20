@@ -5,17 +5,17 @@ const getAllProducts = async (req, res) => {
   try {
     const topTrendy = await Product.find({
       category: { $in: ["Electronics", "electronics"] }
-    }).limit(7);
+    }).limit(8);
 
     const sports = await Product.find({
       category: { $in: ["Sports", "sports"] }
-    }).limit(7);
+    }).limit(8);
 
     const TvData = await Product.find({category:{$in:["TV" ,"Tv", "tv"]}}).limit(8)
 
     const moreData = await Product.find({
       category: { $in: ["beauty", "food", "toys", "Fashion"] }
-    }).limit(7);
+    }).limit(8);
 
     res.status(200).json({
       TopTrendy: topTrendy,
