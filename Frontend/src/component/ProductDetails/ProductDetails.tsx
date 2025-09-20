@@ -107,7 +107,7 @@ function ProductDetails() {
       <Navbar Bgcolor="#a8d5e2" TextColor="black" ImageSrc={FlipkartSecImg} imageWidth="40px" />
 
       <Grid container spacing={2} mt={"90px"} px={2}>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} lg={1.5}>
           <Box
             sx={{
               bgcolor: "#fff",
@@ -184,7 +184,7 @@ function ProductDetails() {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={9}>
+        <Grid item lg={10} md={9}>
           <Typography variant="h5" fontWeight="bold" mb={2}>
             {categoryProducts.length > 0 ? categoryProducts[0].category : "Products"}
           </Typography>
@@ -192,7 +192,7 @@ function ProductDetails() {
           {filteredProducts.length > 0 ? (
             <Grid container spacing={2}>
               {filteredProducts.map((product) => (
-                <Grid item xs={12} sm={6} md={4} key={product._id}>
+                <Grid item xs={6} sm={4} md={4} lg={2.4} key={product._id}>
                   <Paper
                     elevation={1}
                     sx={{
@@ -238,7 +238,7 @@ function ProductDetails() {
                           const target = e.currentTarget as HTMLImageElement;
                           target.src = DefaultTvImg;
                         }}
-                        sx={{ width: "100%", height: "200px", objectFit: "contain", mb: 1 }}
+                        sx={{ width: "100%", height: "130px", objectFit: "contain", mb: 1 }}
                       />
                     </Box>
 

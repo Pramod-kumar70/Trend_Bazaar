@@ -118,10 +118,10 @@ function Home() {
         px: 1,
       }}
     >
-      <Typography variant="h5" fontWeight={700} sx={{fontSize:{md:"16px" ,sm:"13px" ,xs:"17px"}}}>
+      <Typography variant="h5" fontWeight={700} sx={{fontSize:{md:"20px" ,sm:"13px" ,xs:"17px"}}}>
         {title}
       </Typography>
-      <Button variant="contained" sx={{...viewAllButtonStyle , fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"}}}  onClick={onViewAll} >
+      <Button variant="contained" sx={{...viewAllButtonStyle , fontSize:{md:"14px" ,sm:"13px" ,xs:"13px"}}}  onClick={onViewAll} >
         View All
       </Button>
     </Box>

@@ -107,7 +107,7 @@ export default function Navbar({
                 component="img"
                 src={ImageSrc}
                 alt="Logo"
-                sx={{ width:{md:imageWidth , sm:"100px" , xs:"80px"}, cursor: "pointer", borderRadius: 1.5 }}
+                sx={{ width:{md:imageWidth , sm:"50px" , xs:"40px"}, cursor: "pointer", borderRadius: 1.5 }}
                 onClick={() => navigate("/")}
               />
             </Grid>

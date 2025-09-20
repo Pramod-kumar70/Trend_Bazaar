@@ -153,24 +153,24 @@ function SearchProductDetails() {
   return (
     <div>
       <Navbar Bgcolor='#a8d5e2' TextColor='black' ImageSrc={FlipkartSecImg} imageWidth="40px" />
-      <Grid container justifyContent={"space-evenly"} mt={"90px"}>
+      <Grid container justifyContent={"space-evenly"} mt={"90px"} py={3} rowGap={2}>
         {/* Product Image + Buttons */}
-        <Grid item lg={4}>
+        <Grid item lg={4} md={3} sm={3} xs={10}>
           <img
             src={product.thumbnail?.trim() ? product.thumbnail : DefaultTvImg}
             alt={product.title}
             style={{
               width: "100%",
               objectFit: "contain",
-              marginBottom: "10px",
-              height: "300px",
+             
+              marginBottom:"20px",
               borderRadius: "5px"
             }}
             onError={(e) => (e.currentTarget.src = DefaultTvImg)}
           />
 
-          <Grid container display="flex" justifyContent="space-evenly">
-            <Grid item lg={3.5} className="HoverEffect"
+          <Grid container display="flex" justifyContent="space-evenly" rowGap={1} sx={{flexDirection:{md:"row" ,sm:"row" ,xs:"column"}}}>
+            <Grid item lg={3.5} sm={11} xs={11} className="HoverEffect"
               sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
                 toast.info("🛒 Feature coming soon!")
@@ -179,7 +179,7 @@ function SearchProductDetails() {
               <GrCart style={{ fontSize: "30px" }} />
             </Grid>
 
-            <Grid item lg={3.5} className="HoverEffect"
+            <Grid item lg={3.5} sm={11} xs={11} className="HoverEffect"
               sx={{ border: "1px solid black", textAlign: 'center', py: 1.5 }}
               onClick={() =>
                 toast.info("💳 EMI option will be available soon")
@@ -191,6 +191,7 @@ function SearchProductDetails() {
             <Grid
               item
               lg={3.5}
+              sm={11} xs={11}
               className="HoverEffect"
               sx={{
                 backgroundColor: "orangered",
@@ -228,7 +229,7 @@ function SearchProductDetails() {
         </Grid>
 
         {/* Product Details */}
-        <Grid item lg={7}>
+        <Grid item lg={7} md={8} sm={8} xs={10}>
           {/* Title with Show More */}
           <Box>
             <Typography
@@ -334,12 +335,12 @@ function SearchProductDetails() {
           <CircularProgress />
         ) : relatedProducts.length > 0 ? (
           <>
-            <Grid container justifyContent={"space-evenly"}>
+            <Grid container justifyContent={"space-between"} rowGap={2} >
               {relatedProducts
                 .filter((p) => p._id !== product._id)
                 .slice(0, 5)
                 .map((item: Product) => (
-                  <Grid item lg={2.2} key={item._id}>
+                  <Grid item lg={2.2} md={2} sm={3} xs={5.7} key={item._id}>
                     <Card
                       sx={{
                         cursor: "pointer",
@@ -353,7 +354,7 @@ function SearchProductDetails() {
                     >
                       <CardMedia
                         component="img"
-                        height="180"
+                        height={"180"}
                         image={
                           item.thumbnail?.trim() ? item.thumbnail : DefaultTvImg
                         }
