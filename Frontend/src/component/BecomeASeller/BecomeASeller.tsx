@@ -20,6 +20,7 @@ import { useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
 import FlipkartSecImg from "../../assets/chatgptlogoone.png"
 import { useNavigate } from "react-router-dom";
+import Footer from "../Footer/Footer";
 
 export default function BecomeASeller() {
     const api = import.meta.env.VITE_API_BASE_URL;
@@ -154,7 +155,10 @@ export default function BecomeASeller() {
   };
 
   return (
-    <Box sx={{ backgroundColor: "#f4f6f8" }} mt="60px">
+ 
+    <>
+
+    <Box sx={{ backgroundColor: "#f4f6f8" }}>
       <Navbar Bgcolor='#a8d5e2' TextColor='black' ImageSrc={FlipkartSecImg} imageWidth="40px" />
       {/* <SellerNavbar /> */}
 
@@ -249,7 +253,7 @@ export default function BecomeASeller() {
             {tab === 0 ? (
               <form onSubmit={handleRegister}>
                 <Grid container spacing={2}>
-                  <Grid item lg={6}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <TextField
                       label="Full Name"
                       name="fullname"
@@ -258,7 +262,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item lg={6}>
+                  <Grid item lg={6} sm={12} xs={12} >
                     <TextField
                       label="Business Name"
                       name="businessName"
@@ -267,7 +271,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item lg={6}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <TextField
                       label="Email Address"
                       name="email"
@@ -277,7 +281,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item lg={6}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <TextField
                       label="Phone Number"
                       name="phone"
@@ -286,7 +290,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item lg={6}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <TextField
                       label="Password"
                       name="password"
@@ -295,7 +299,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item lg={12}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <TextField
                       label="Business Address"
                       name="businessAddress"
@@ -306,7 +310,7 @@ export default function BecomeASeller() {
                       rows={3}
                     />
                   </Grid>
-                  <Grid item lg={12}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <Button
                       variant="contained"
                       fullWidth
@@ -326,7 +330,7 @@ export default function BecomeASeller() {
             ) : (
               <form onSubmit={handleLogin}>
                 <Grid container spacing={2}>
-                  <Grid item lg={12}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <TextField
                       label="Email"
                       name="email"
@@ -336,7 +340,7 @@ export default function BecomeASeller() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item lg={12}>
+                  <Grid item lg={6} sm={12} xs={12}>
                     <TextField
                       label="Password"
                       name="password"
@@ -378,7 +382,7 @@ export default function BecomeASeller() {
         >
           What Our Sellers Say
         </Typography>
-        <Grid container spacing={4} justifyContent="center" sx={{ mt: 3 }}>
+        <Grid container justifyContent="space-evenly" sx={{ mt: 3 }} rowGap={3}>
           {[
             {
               name: "Amit Sharma",
@@ -399,7 +403,7 @@ export default function BecomeASeller() {
               img: "https://randomuser.me/api/portraits/men/53.jpg",
             },
           ].map((seller, i) => (
-            <Grid item lg={3} key={i}>
+            <Grid item lg={3} key={i} xs={11} sm={11}>
               <Card
                 sx={{
                   p: 3,
@@ -470,5 +474,8 @@ export default function BecomeASeller() {
         </Grid>
       </Box>
     </Box>
+
+    <Footer></Footer>
+    </>
   );
 }

@@ -120,11 +120,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (token) fetchCart();
     // Mock addresses
-    setAddresses([
-      { id: 1, name: "Pramod Kumar", phone: "9876543210", pincode: "852201", city: "Saharsa", state: "Bihar", addressLine: "House No 21, Gandhi Nagar", label: "Home" },
-      { id: 2, name: "Office", phone: "9123456780", pincode: "110001", city: "New Delhi", state: "Delhi", addressLine: "Internexus Tech Hub, Sector 18", label: "Work" },
-    ]);
-    setSelectedAddressId(1);
+    
   }, [token]);
 
   const subtotal = useMemo(() => cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0), [cartItems]);
@@ -133,7 +129,6 @@ export default function CheckoutPage() {
   const totalAmount = subtotal - promoDiscount + deliveryCharge;
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) ?? null;
-  const expectedDeliveryDate = useMemo(() => { const d = new Date(); d.setDate(d.getDate() + 5); return d.toDateString(); }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
@@ -193,13 +188,7 @@ export default function CheckoutPage() {
               <Typography variant="h6" fontWeight={700}>1. Review Cart</Typography>
               <Divider sx={{ my: 1 }} />
               {loadingCart ? <Typography>Loading Cart...</Typography> :
-                cartItems.map(item => (
-                  <Grid container spacing={2} key={item._id} alignItems="center" sx={{ mb: 1 }}>
-                    <Grid xs={3}><img src={item.product.thumbnail} alt={item.product.name} style={{ width: "100%", borderRadius: 8 }} /></Grid>
-                    <Grid xs={6}><Typography fontWeight={700}>{item.product.name}</Typography><Typography color="text.secondary">Quantity: {item.quantity}</Typography></Grid>
-                    <Grid xs={3} sx={{ textAlign: "right" }}><Typography fontWeight={800}>₹{item.product.price * item.quantity}</Typography><Typography color="text.secondary" fontSize={12}>Delivered by {expectedDeliveryDate}</Typography></Grid>
-                  </Grid>
-                ))
+                ""
               }
               <Divider sx={{ my: 2 }} />
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}><Typography>Subtotal</Typography><Typography>₹{subtotal}</Typography></Box>
@@ -255,17 +244,17 @@ export default function CheckoutPage() {
                 <FormControlLabel value="upi" control={<Radio />} label="UPI" />
                 {paymentMethod === "upi" && (
                   <Box sx={{ mt: 1 }}>
-                    <Grid container spacing={1}>
+                    <Grid container justifyContent={'space-between'}>
                       {["gpay", "phonepe", "paytm"].map(app => (
-                        <Grid xs={4} key={app}>
+                        <Grid xs={3.7} key={app}>
                           <Button
                             variant={selectedUpiApp === app ? "contained" : "outlined"}
                             fullWidth
                             onClick={() => setSelectedUpiApp(app)}
                           >
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
                               {/* Alag alag avatar har app ke liye */}
-                              <img width={"50px"} src={UPI_LOGOS[app]} height={"40px"}  />
+                              <img width={"30px"} src={UPI_LOGOS[app]}   />
                               <Typography sx={{ fontSize: 12 }}>{app.toUpperCase()}</Typography>
                             </Box>
                           </Button>
@@ -315,7 +304,7 @@ export default function CheckoutPage() {
           {/* Step 3: Order Confirmation */}
           {step === 3 && orderPlaced && (
             <Card sx={{ mb: 2, p: 2, boxShadow: 3 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{ display: "flex",flexDirection:"column", alignItems: "center", gap: 2 }}>
                 <CheckCircleOutlineIcon sx={{ color: "green", fontSize: 42 }} />
                 <Box>
                   <Typography variant="h5" fontWeight={800}>Order Confirmed</Typography>

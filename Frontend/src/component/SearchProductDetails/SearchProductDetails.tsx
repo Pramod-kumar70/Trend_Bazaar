@@ -340,7 +340,7 @@ function SearchProductDetails() {
                 .filter((p) => p._id !== product._id)
                 .slice(0, 5)
                 .map((item: Product) => (
-                  <Grid item lg={2.2} md={2} sm={3} xs={5.7} key={item._id}>
+                  <Grid item lg={2.2} md={2} sm={11} xs={11} key={item._id}>
                     <Card
                       sx={{
                         cursor: "pointer",

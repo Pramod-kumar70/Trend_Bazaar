@@ -22,7 +22,7 @@ import { toast } from "sonner";
 
 import Login from "../Login/LogIn";
 import Signup from "../Signup/Signup";
-import logoimg from "../../assets/chatgptcrp.png";
+import logoimg from "../../assets/ChatGPT Image Sep 6, 2025, 08_55_11 PM.png";
 
 const Search = styled("div")(() => ({
   position: "relative",
@@ -98,20 +98,20 @@ export default function Navbar({
 
   return (
     <Box >
-      <AppBar position="relative" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3 ,py:{lg:0 ,md:1,sm:.5 ,xs:.5}} }>
-        <Toolbar sx={{ display: "flex", flexDirection:{md:"row" ,sm:"column" , xs:"column"}, }}>
+      <AppBar position="relative" sx={{ bgcolor: Bgcolor, color: TextColor, boxShadow: 3, py: { lg: 0, md: 1, sm: .5, xs: .5 } }}>
+        <Toolbar sx={{ display: "flex", flexDirection: { md: "row", sm: "column", xs: "column" }, }}>
           {/* Top Row (Logo + Searchbar) */}
           <Grid container alignItems="center" justifyContent={'space-between'} px={1}>
-            <Grid item xs={1} md={3}>
+            <Grid item xs={2} md={2} sm={2}>
               <Box
                 component="img"
                 src={ImageSrc}
                 alt="Logo"
-                sx={{ width:{md:imageWidth , sm:"50px" , xs:"80px" ,lg:imageWidth}, cursor: "pointer", borderRadius: 1.5 }}
+                sx={{ width: { md: imageWidth, sm: "50px", xs: "100%", lg: imageWidth }, cursor: "pointer", borderRadius: 1.5 }}
                 onClick={() => navigate("/")}
               />
             </Grid>
-            <Grid item xs={8} md={8}>
+            <Grid item xs={9} md={8} sm={9}>
               <Search>
                 <StyledInputBase
                   placeholder="Search for products, brands and more"
@@ -130,17 +130,17 @@ export default function Navbar({
           <Box
             sx={{
               display: "flex",
-              gap:{md:4 ,sm:2 ,xs:1},
+              gap: { md: 4, sm: 2, xs: 1 },
               mt: isSmallScreen ? 1 : 0,
               justifyContent: isSmallScreen ? "space-between" : "flex-end",
               width: "100%",
-              alignItems:"center"
-              
+              alignItems: "center"
+
             }}
           >
             <Typography
-              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"} }}
-              onClick={() => window.open("/BecomeaSeller", "_blank")}
+              sx={{ cursor: "pointer", fontWeight: 500, "&:hover": { textDecoration: "underline" }, fontSize: { md: "16px", sm: "13px", xs: "13px" } }}
+              onClick={() => navigate("/BecomeaSeller")}
             >
               <AiOutlineShop style={{ marginTop: -3 }} /> Become a Seller
             </Typography>
@@ -149,7 +149,7 @@ export default function Navbar({
               sx={{
                 cursor: "pointer",
                 fontWeight: 500,
-                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"} 
+                "&:hover": { textDecoration: "underline" }, fontSize: { md: "16px", sm: "13px", xs: "13px" }
               }}
               onClick={(e) => setMoreAnchor(moreAnchor ? null : e.currentTarget)}
             >
@@ -172,7 +172,7 @@ export default function Navbar({
                 fontWeight: 500,
                 display: "flex",
                 alignItems: "center",
-                "&:hover": { textDecoration: "underline" }, fontSize:{md:"16px" ,sm:"13px" ,xs:"13px"} 
+                "&:hover": { textDecoration: "underline" }, fontSize: { md: "16px", sm: "13px", xs: "13px" }
               }}
               onClick={() => {
                 if (token) navigate("/cart/Details/MyCart");
@@ -184,13 +184,38 @@ export default function Navbar({
 
             {user ? (
               <>
-                <IconButton onClick={(e) => setProfileMenuAnchor(e.currentTarget)} sx={{p:0}}> 
-                  <Avatar alt={user.name} src={user.profileImage || ""}  sx={{ width: 28, height: 28, fontSize: "0.75rem" }} />
+                <IconButton onClick={(e) => setProfileMenuAnchor(e.currentTarget)} sx={{ p: 0 }}>
+                  <Avatar alt={user.name} src={user.profileImage || ""} sx={{ width: 28, height: 28, fontSize: "0.75rem" }} />
                 </IconButton>
                 <Menu
                   anchorEl={profileMenuAnchor}
                   open={Boolean(profileMenuAnchor)}
                   onClose={() => setProfileMenuAnchor(null)}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  disableScrollLock={true}   // ✅ Ye add karo
+                  PaperProps={{
+                    elevation: 4,
+                    sx: {
+                      mt: 1,
+                      borderRadius: 2,
+                      minWidth: 180,
+                      p: 0.5,
+                      "& .MuiMenuItem-root": {
+                        borderRadius: 1,
+                        fontSize: "0.9rem",
+                        "&:hover": {
+                          backgroundColor: "#f5f5f5",
+                        },
+                      },
+                    },
+                  }}
                 >
                   <MenuItem
                     onClick={() => {
@@ -198,14 +223,15 @@ export default function Navbar({
                       setProfileMenuAnchor(null);
                     }}
                   >
-                    Profile
+                    👤 Profile
                   </MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>🚪 Logout</MenuItem>
                 </Menu>
+
               </>
             ) : (
               <Typography
-                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center" , fontSize:{md:"16px" ,sm:"13px" ,xs:"13px" }}}
+                sx={{ cursor: "pointer", fontWeight: 500, display: "flex", alignItems: "center", fontSize: { md: "16px", sm: "13px", xs: "13px" } }}
                 onClick={() => setOpenLogin(true)}
               >
                 <VscAccount style={{ marginRight: "5px" }} /> Login

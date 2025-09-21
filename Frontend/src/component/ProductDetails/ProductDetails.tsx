@@ -117,7 +117,7 @@ function ProductDetails() {
     <div>
       <Navbar Bgcolor="#a8d5e2" TextColor="black" ImageSrc={FlipkartSecImg} imageWidth="40px" />
 
-      <Grid container spacing={2} mt={"90px"} px={2}>
+      <Grid container spacing={2} px={2}>
         <Grid item xs={12} sm={12} md={3} lg={1.5}>
           {/* md+ screens → sidebar filters */}
           <Box
@@ -270,9 +270,9 @@ function ProductDetails() {
           </Typography>
 
           {filteredProducts.length > 0 ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={2} sx={{justifyContent:{md:"start" ,sm:"center" ,xs:"center"}}}>
               {filteredProducts.map((product) => (
-                <Grid item xs={6} sm={4} md={4} lg={2.4} key={product._id}>
+                <Grid item xs={11} sm={11} md={4} lg={2.4} key={product._id}>
                   <Paper
                     elevation={1}
                     sx={{

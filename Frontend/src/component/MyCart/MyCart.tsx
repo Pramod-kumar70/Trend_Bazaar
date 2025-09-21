@@ -171,9 +171,9 @@ function MyCart() {
         <Box
           sx={{
             p: 3,
-            background: "#fff",
-            mt: "70px",
-            boxShadow: 1,
+           
+           
+            
             borderRadius: 2,
           }}
         >
@@ -198,7 +198,7 @@ function MyCart() {
                   <Card
                     sx={{
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection:{md:"row" ,xs:"column" ,sm:"column"},
                       alignItems: "center",
                       borderRadius: 2,
                       boxShadow: 2,
