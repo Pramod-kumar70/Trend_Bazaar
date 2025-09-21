@@ -34,13 +34,7 @@ app.set('view engine', 'pug');
 
 // Middlewares
 app.use(logger('dev'));
-const corsOptions = {
-  origin: "https://trend-bazaar-kappa.vercel.app/", // apna frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-};
-app.use(cors(corsOptions));
-
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

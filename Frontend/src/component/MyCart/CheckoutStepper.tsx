@@ -138,20 +138,40 @@ export default function CheckoutPage() {
     return () => { if (timer) clearInterval(timer); };
   }, [orderPlaced, orderStep]);
 
-  const placeOrder = () => {
-    if (!selectedAddressId) return alert("Select address");
-    if (!paymentMethod) return alert("Select payment");
-    if (paymentMethod === "card") {
-      const { number, expiry, cvv, name } = cardForm;
-      if (!number || !expiry || !cvv || !name) return alert("Complete card details");
-    }
-    if (paymentMethod === "upi" && !selectedUpiApp) return alert("Select UPI app");
-    const id = `ORD-${Date.now().toString().slice(-8).toUpperCase()}`;
-    setOrderId(id);
+  const placeOrder = async () => {
+  if (!selectedAddressId) return alert("Select address");
+  if (!paymentMethod) return alert("Select payment");
+
+  // Payment validation
+  if (paymentMethod === "card") {
+    const { number, expiry, cvv, name } = cardForm;
+    if (!number || !expiry || !cvv || !name) return alert("Complete card details");
+  }
+  if (paymentMethod === "upi" && !selectedUpiApp) return alert("Select UPI app");
+
+  const id = `ORD-${Date.now().toString().slice(-8).toUpperCase()}`;
+  setOrderId(id);
+
+  try {
+    const res = await axios.post(`${api}/order/place`, {
+      userId: localStorage.getItem("userId"),
+      items: cartItems,
+      address: selectedAddress,
+      paymentMethod,
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    setOrderId(res.data.orderId);
     setOrderPlaced(true);
     setOrderStep(0);
     setStep(3);
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Failed to place order. Try again!");
+  }
+};
+
 
   const cancelOrder = () => {
     setOrderStep(-1);
