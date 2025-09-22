@@ -153,7 +153,7 @@ function SearchProductDetails() {
   return (
     <div>
       <Navbar Bgcolor='#a8d5e2' TextColor='black' ImageSrc={FlipkartSecImg} imageWidth="40px" />
-      <Grid container justifyContent={"space-evenly"} mt={"90px"} py={3} rowGap={2}>
+      <Grid container justifyContent={"space-evenly"} py={3} rowGap={2}>
         {/* Product Image + Buttons */}
         <Grid item lg={4} md={3} sm={3} xs={10}>
           <img
